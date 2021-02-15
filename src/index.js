@@ -2,11 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import  "./components/MainPage";
 import reportWebVitals from './reportWebVitals';
+import MainPage from './components/MainPage';
+import PageStarter from "./components/PageStarter";
+import Navigation from "./components/Navigation";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <PageStarter/>
   </React.StrictMode>,
   document.getElementById('root')
 );
