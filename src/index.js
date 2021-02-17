@@ -4,16 +4,46 @@ import './index.css';
 import App from './App';
 import  "./components/MainPage";
 import reportWebVitals from './reportWebVitals';
-import MainPage from './components/MainPage';
-import PageStarter from "./components/PageStarter";
-import Navigation from "./components/Navigation";
+
+import { 
+  createHttpLink,
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql
+ } from '@apollo/client';
+
+const httpLink = createHttpLink({
+  uri: 'http://localhost:8080/graphql',
+  fetchOptions: {
+    mode: 'no-cors'
+  }
+});
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache()
+});
+
+// client.query({
+//     query: gql`
+//       {
+//         allPages {
+//           title
+//         }
+//       }
+//       `
+//   })
+//   .then(result => console.log(result))
+//   .catch(error => console.log(error));
 
 ReactDOM.render(
-  <React.StrictMode>
-    <PageStarter/>
-  </React.StrictMode>,
+  <ApolloProvider client={client}>
+    <App/>
+  </ApolloProvider>,
   document.getElementById('root')
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

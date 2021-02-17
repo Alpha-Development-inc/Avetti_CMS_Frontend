@@ -4,10 +4,16 @@ import ReactDOM from 'react-dom';
 import Demo from './Dialog';
 
 const Page =(props)=>{
+
     const [pages,setPages]=useState([]);
     const [rows,setRows]=useState([]);
-     let prevRowId=0
-     function addRow(){
+
+    let prevRowId=0
+
+    console.log(props.match.params.pageTitle);
+
+     
+    function addRow(){
         prevRowId=prevRowId+1;
         setRows([...rows,
                 {
@@ -15,7 +21,8 @@ const Page =(props)=>{
                     order:prevRowId,
                     contentComponents:[]
                 }])
-     }
+    } 
+    
     // function addRowNew(){
     //     prevRowId=prevRowId+1;
     //     setPages(
