@@ -52,13 +52,13 @@ fetch('http://localhost:8080/graphql', requestOptions)
             <Link to='/'>PageStarter</Link>
           </li>
           <li>
-            <Link to='/pages/page1'>Page 1</Link>
+            <Link to='/page1'>Page 1</Link>
           </li>
           <li>
-            <Link to='/pages/page2'>Page 2</Link>
+            <Link to='/page2'>Page 2</Link>
           </li>
           <li>
-            <Link to='/pages/page3'>Page 3</Link>
+            <Link to='/page3'>Page 3</Link>
           </li>
         </ul>
       </nav>
