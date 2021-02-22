@@ -1,6 +1,8 @@
 import {Link} from 'react-router-dom';
 import React from "react";
 import { useQuery, gql } from '@apollo/client';
+import { Box, Button, makeStyles } from '@material-ui/core';
+import '../styles/HomePage.css';
 
 const ALL_PAGES = gql`
   query GetAllPages {
@@ -10,6 +12,9 @@ const ALL_PAGES = gql`
     }
   }
 `;
+
+const useStyles = makeStyles((theme) => ({
+}))
 
 const HomePage = () => {
 
@@ -45,23 +50,22 @@ fetch('http://localhost:8080/graphql', requestOptions)
   // ));
 
     return (
+
+      <Box display="flex" flexDirection="column" alignItems="flex-start">
         
-      <nav>
-        <ul>
-          <li>
-            <Link to='/'>PageStarter</Link>
-          </li>
-          <li>
-            <Link to='/page1'>Page 1</Link>
-          </li>
-          <li>
-            <Link to='/page2'>Page 2</Link>
-          </li>
-          <li>
-            <Link to='/page3'>Page 3</Link>
-          </li>
-        </ul>
-      </nav>
+        <Box m="10px">
+          <Button className="navitem" variant="contained" color="primary" href="/page1">Page 1</Button>
+        </Box>
+        
+        <Box m="10px">
+          <Button className="navitem" variant="contained" color="primary" href="/page2">Page 2</Button>
+        </Box>
+        
+        <Box m="10px">
+          <Button className="navitem" variant="contained" color="primary" href="/page3">Page 3</Button>
+        </Box>
+        
+      </Box>
      
     );
   };

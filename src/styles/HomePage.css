@@ -1,0 +1,9 @@
+.navlinks{
+    display: flex;
+    flex-direction: column;
+}
+
+.navitem{
+    margin: 10px;
+    display: inline-block;
+}
