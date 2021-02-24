@@ -14,29 +14,10 @@ import {
   gql
  } from '@apollo/client';
 
-const httpLink = createHttpLink({
-  uri: 'http://localhost:8080/graphql',
-  fetchOptions: {
-    mode: 'no-cors'
-  }
-});
-
 const client = new ApolloClient({
-  link: httpLink,
+  uri: 'http://localhost:8080/graphql',
   cache: new InMemoryCache()
 });
-
-// client.query({
-//     query: gql`
-//       {
-//         allPages {
-//           title
-//         }
-//       }
-//       `
-//   })
-//   .then(result => console.log(result))
-//   .catch(error => console.log(error));
 
 ReactDOM.render(
   <ApolloProvider client={client}>

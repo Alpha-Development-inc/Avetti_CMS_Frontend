@@ -30,3 +30,7 @@ html,
 body {
   height: 100%;
 }
+
+.row-create{
+  border-style: dashed !important;
+}

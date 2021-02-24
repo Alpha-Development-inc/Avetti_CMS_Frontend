@@ -3,91 +3,57 @@ import Row from "./Row";
 import ReactDOM from 'react-dom';
 import Demo from './Dialog';
 import { useEffect } from 'react';
+import { gql, useQuery } from '@apollo/client';
+import { Box } from '@material-ui/core';
+import CreateRow from './CreateRow';
+import CreatePage from './CreatePage';
+import Loading from './Loading';
 
 const Page =(props)=>{
+
+    const PAGE = gql`{
+        page(title:"${props.match.params.pageTitle}"){
+          id
+          title
+          contentRows{
+              contentComponents{
+                  text
+              }
+          }
+        }
+      }
+      `;
 
     const [page,setPage]=useState({
         contentRows:[]
     });
 
-     
-    // function addRow(){
-    //     prevRowId=prevRowId+1;
-    //     setRows([...rows,
-    //             {
-    //                 id:prevRowId,
-    //                 order:prevRowId,
-    //                 contentComponents:[]
-    //             }])
-    // } 
-    
-    // function addRowNew(){
-    //     prevRowId=prevRowId+1;
-    //     setPages(
-    //         [...pages,
-    //             {
-    //               id: (prevRowId),
-                  
-    //               contentRows : [
-    //                 {
-    //                   id : (prevRowId+=1),
-    //                   orderNumber:1,
-    //                   contentComponents: [
-    //                  {
-                         
-    //                  }
-    //                   ]
-    //                 },
-                    
-                    
-    //               ]
-    //             }
-               
-    //         ]
-    //     )
-    //     console.log(pages);
-    //     //ReactDOM.render(<Row />,document.getElementById('page'))
-    // }
+    const {loading, error, data } = useQuery(PAGE);
 
-    const requestOptions = {
-        method: 'POST',
-        body: `{
-          page(title:"${props.match.params.pageTitle}"){
-            id
-            title
-            contentRows{
-                contentComponents{
-                    text
-                }
-            }
-          }
+    useEffect(()=>{
+        if (!loading && data){
+            setPage(data.page);
         }
-        `
-    };
+    },[loading, data]);
 
-    useEffect(() => {
+    const handleAddPage = (newPage) => {
+        console.log("in handle add page....")
+        setPage(newPage);
+    }
 
-        fetch('http://localhost:8080/graphql', requestOptions)
-            .then(response => response.json())
-            .then(data => setPage(data.data.page));
+    if (loading) return (<Loading/>);
+    if (error) return <p>Error :(</p>;
 
-    },[]);
-
-    if (!page) {return (<div>No rows</div>)}    
+    if (!page) {return (<CreatePage pageTitle={props.match.params.pageTitle} addPage={handleAddPage}/>)}    
 
     return(
-        <div id="page">
-            <div id ='buttons'>
-                    <button>
-                        +
-                    </button>
-                    
-                    
-            </div>
-            <div id='rowcontent'>
-                {page.contentRows.map((g)=>(<Row rowComponents={g.contentComponents}/>))}
-            </div>
-        </div>
+        
+        <Box height="100%" display="flex" flexDirection="column" width="60%" marginX="auto">
+            {page.contentRows.map((g, index)=>(
+            <Row rowIndex={index} pageId={page.id} rowComponents={g.contentComponents}/>
+            ))}
+            <CreateRow pageId={page.id}/>
+        </Box>
         
     )
 }
