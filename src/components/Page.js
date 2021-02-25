@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Row from "./Row";
 import ReactDOM from 'react-dom';
-import Demo from './Dialog';
+
 import { useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
 import { Box } from '@material-ui/core';

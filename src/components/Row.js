@@ -1,16 +1,16 @@
-import { Box, Button, Paper } from '@material-ui/core';
+import { Box, Button, Paper,Dialog,DialogActions } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom'
-import Demo from './Dialog';
+import CreateComponentDialog from './CreateComponentDialog'
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { gql, useMutation } from '@apollo/client';
 
 const Row =(props)=>{
     const [rowComponents,setRowComponents]=useState([]);
-
+    const [open, setOpen] = useState(false);
     function addNewComponent(){
-        ReactDOM.render(<Demo />, document.querySelector('#root'));
+       
     }
 
     const DELETE_ROW = gql`
@@ -42,12 +42,29 @@ const Row =(props)=>{
         }
         
     }, [data, loading]);
-
+    function addNewComponent(){
+        
+        
+         
+     }
+    const handleOpenDialog=()=>{
+        setOpen(true);
+    }
+    const handleCloseDialog=()=>{
+        setOpen(false);
+    }
     return(
+
         <Box height="33%" border={2} borderColor="primary.main" borderRadius="10px" marginTop="5px">
             <Paper elevation={3}>
                 <Box display="flex" flexDirection="row" justifyContent="flex-end">
-                    <Button color="primary" startIcon={<AddIcon/>}>Add Component</Button>
+                    <Button color="primary" onClick={handleOpenDialog} startIcon={<AddIcon/>}>Add Component</Button>
+                    <Dialog  open={open} onClose={handleCloseDialog} aria-labelledby="createcomponentdialog">
+                        <CreateComponentDialog />
+                        <DialogActions>
+                            <Button onClick={handleCloseDialog}>Close  </Button>
+                        </DialogActions>
+                    </Dialog>
                     <Button color="secondary" startIcon={<DeleteIcon/>} onClick={handleDelete}>Delete</Button>
                 </Box>
             </Paper>
