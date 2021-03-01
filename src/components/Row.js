@@ -59,11 +59,13 @@ const Row =(props)=>{
             <Paper elevation={3}>
                 <Box display="flex" flexDirection="row" justifyContent="flex-end">
                     <Button color="primary" onClick={handleOpenDialog} startIcon={<AddIcon/>}>Add Component</Button>
-                    <Dialog  open={open} onClose={handleCloseDialog} aria-labelledby="createcomponentdialog">
-                        <CreateComponentDialog />
-                        <DialogActions>
-                            <Button onClick={handleCloseDialog}>Close  </Button>
-                        </DialogActions>
+                    <Dialog
+                        open={open} 
+                        onClose={handleCloseDialog}
+                        aria-labelledby="createcomponentdialog"
+                        fullWidth
+                        maxWidth="sm">
+                        <CreateComponentDialog handleClose={handleCloseDialog}/>
                     </Dialog>
                     <Button color="secondary" startIcon={<DeleteIcon/>} onClick={handleDelete}>Delete</Button>
                 </Box>
