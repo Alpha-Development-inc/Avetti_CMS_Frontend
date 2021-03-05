@@ -31,8 +31,9 @@ const CreateTextContent = (props) => {
   const convertContentToHTML = () => {
     let currentContentAsHTML = convertToHTML(editorState.getCurrentContent());
     setConvertedContent(currentContentAsHTML);
-    console.log("f"+convertedContent);
+    console.log("final converted"+convertedContent);
   }
+
   const createMarkup = (html) => {
     // return  {
     //   __html: DOMPurify.sanitize(html)
