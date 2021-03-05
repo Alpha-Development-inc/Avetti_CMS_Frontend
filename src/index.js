@@ -5,23 +5,29 @@ import App from './App';
 import  "./components/MainPage";
 import reportWebVitals from './reportWebVitals';
 import 'typeface-roboto';
-
+import {IKContext} from 'imagekitio-react';
 import { 
-  createHttpLink,
   ApolloClient,
   InMemoryCache,
-  ApolloProvider,
-  gql
+  ApolloProvider
  } from '@apollo/client';
+import { createUploadLink } from 'apollo-upload-client';
+
+
+const httpLink = createUploadLink({uri: 'http://localhost:8080/graphql'});
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8080/graphql',
+  link: httpLink,
   cache: new InMemoryCache()
 });
 
+const urlEndpoint = 'https://ik.imagekit.io/g56fnhdh8px/';
+
 ReactDOM.render(
   <ApolloProvider client={client}>
+    <IKContext urlEndpoint={urlEndpoint}>
     <App/>
+    </IKContext>
   </ApolloProvider>,
   document.getElementById('root')
 );

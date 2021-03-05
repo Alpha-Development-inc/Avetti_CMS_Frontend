@@ -1,6 +1,7 @@
 import { Stepper,Step,StepLabel,Button,Box } from "@material-ui/core";
 import React,{useState} from 'react';
 import ChooseContentType from "./ChooseContentType";
+import CreateImageContent from "./CreateImageContent";
 
 const CreateComponentDialog=(props)=>{
     
@@ -12,6 +13,7 @@ const CreateComponentDialog=(props)=>{
     const steps = ['Select Content Type', 'Add content '];
 
     const getStepContent = (stepIndex) => {
+      console.log("rendering.....");
       switch (stepIndex) {
         case 0:
           return ( 
@@ -21,7 +23,7 @@ const CreateComponentDialog=(props)=>{
           switch(component.type) {
             case 'image':
               return (
-                <div></div>
+                <CreateImageContent/>
               );
             case 'text':
               return (
@@ -53,6 +55,7 @@ const CreateComponentDialog=(props)=>{
       };
     return(
         <Box paddingX="30px">
+          <h4>{component.type}</h4>
           <Stepper activeStep={activeStep}>
               {steps.map((label) => (
                   <Step key={label}>
@@ -70,8 +73,10 @@ const CreateComponentDialog=(props)=>{
             >
               Back
             </Button>
-            <Button variant="contained" color="primary" onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            <Button variant="contained" color="primary"
+            onClick={handleNext}
+            disabled={component.type === ''}>
+              {activeStep === steps.length - 1 ? 'Save' : 'Next'}
             </Button>
             <span className="spacer"/>
             <Button onClick={props.handleClose}>Close</Button>
