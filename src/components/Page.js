@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { createContext, useState } from 'react';
 import Row from "./Row";
 import ReactDOM from 'react-dom';
 
@@ -8,6 +8,7 @@ import { Box } from '@material-ui/core';
 import CreateRow from './CreateRow';
 import CreatePage from './CreatePage';
 import Loading from './Loading';
+import { PageProvider } from '../contexts/PageContext';
 
 const Page =(props)=>{
 
@@ -17,7 +18,8 @@ const Page =(props)=>{
           title
           contentRows{
               contentComponents{
-                  text
+                  type
+                  content
               }
           }
         }
@@ -47,13 +49,15 @@ const Page =(props)=>{
     if (!page) {return (<CreatePage pageTitle={props.match.params.pageTitle} addPage={handleAddPage}/>)}    
 
     return(
-        
-        <Box height="100%" display="flex" flexDirection="column" width="60%" marginX="auto">
-            {page.contentRows.map((g, index)=>(
-            <Row rowIndex={index} pageId={page.id} rowComponents={g.contentComponents}/>
-            ))}
-            <CreateRow pageId={page.id}/>
-        </Box>
+        <PageProvider value={page.id}>
+            <Box height="100%" display="flex" flexDirection="column" width="60%" marginX="auto">
+                {page.contentRows.map((g, index)=>(
+                <Row rowIndex={index} rowComponents={g.contentComponents}/>
+                ))}
+                <CreateRow/>
+            </Box>
+        </PageProvider>
+
         
     )
 }

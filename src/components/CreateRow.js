@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Box, Button } from '@material-ui/core';
 import { gql, useMutation } from '@apollo/client';
+import PageContext from "../contexts/PageContext";
 
 const CreateRow = (props) => {
 
@@ -11,7 +12,8 @@ const CreateRow = (props) => {
           title
           contentRows{
               contentComponents{
-                  text
+                  type
+                  content
               }
           }
         }
@@ -20,8 +22,10 @@ const CreateRow = (props) => {
 
     const [addRow, { data, error, loading }] = useMutation(CREATE_ROW);
 
+    const pageId = useContext(PageContext);
+
     const handleCreate = () => {
-        addRow({variables: { title: "newRow", pageId: props.pageId}});
+        addRow({variables: { title: "newRow", pageId: pageId}});
     }
 
     useEffect(() => {

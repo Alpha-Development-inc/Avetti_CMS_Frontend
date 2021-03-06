@@ -1,35 +1,61 @@
 import { useMutation, gql } from "@apollo/client";
 import { Box } from "@material-ui/core";
-import { IKImage, IKUpload } from "imagekitio-react";
-import React from "react";
+import React, { forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react";
+import PageContext from "../contexts/PageContext";
+import RowContext from "../contexts/RowContext";
+import Loading from './Loading';
 
 const CREATE_IMAGE_COMPONENT = gql`
 mutation CreateImageComponent($image: Upload, $rowIndex: Int!, $pageId: String!) {
     createImageComponent(image: $image, rowIndex: $rowIndex, pageId: $pageId){
+        id
         title
+        contentRows{
+            contentComponents{
+                type
+                content
+            }
+        }
     }
 }
 `;
 
-const CreateImageContent = (props) => {
+const CreateImageContent = forwardRef((props, ref) => {
 
-    const [update] = useMutation(CREATE_IMAGE_COMPONENT);
+    const [image, setImage] = useState(null);
+    const pageId = useContext(PageContext);
+    const rowIndex = useContext(RowContext); 
 
-    const handleUpload = (e) => {
+    const [update, {data, error, loading}] = useMutation(CREATE_IMAGE_COMPONENT);
 
-        const file = e.target.files[0];
-        update({variables:{
-            image: file,
-            rowIndex: 0,
-            pageId: '111'
-        }});
-
+    const handleChange = (e) => {
+        setImage(e.target.files[0]);
     }
+
+    useImperativeHandle(ref, () => ({
+
+        uploadImageComponent(){
+            update({variables:{
+                image: image,
+                rowIndex: rowIndex,
+                pageId: pageId
+            }});
+        }
+
+    }));
+
+    useEffect(() => {
+        if (!loading && data){
+            props.handleClose();
+        }
+    }, [data, loading]);
+
+    if (loading) return (<Loading/>);
 
     return (
         <Box display="flex" justifyContent="center">
 
-            <input type="file" placeholder="Choose a file" onChange={handleUpload}/>
+            <input type="file" placeholder="Choose a file" onChange={handleChange}/>
 
 
             {/* <IKUpload
@@ -40,6 +66,6 @@ const CreateImageContent = (props) => {
         </Box>
      
     );
-  };
+  });
 
 export default CreateImageContent;
