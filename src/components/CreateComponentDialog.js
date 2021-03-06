@@ -2,7 +2,7 @@ import { Stepper,Step,StepLabel,Button,Box } from "@material-ui/core";
 import React,{useState} from 'react';
 import ChooseContentType from "./ChooseContentType";
 import CreateImageContent from "./CreateImageContent";
-
+import CreateTextComponent from './CreateTextContent'
 const CreateComponentDialog=(props)=>{
     
     const [activeStep, setActiveStep] = useState(0);
@@ -27,7 +27,10 @@ const CreateComponentDialog=(props)=>{
               );
             case 'text':
               return (
-                <div></div>
+                <div>
+                  
+                  <CreateTextComponent/>
+                </div>
               );
             default:
               return (
