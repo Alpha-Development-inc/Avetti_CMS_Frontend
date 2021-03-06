@@ -12,7 +12,8 @@ const CreatePage = (props) => {
         title
         contentRows{
             contentComponents{
-                text
+                type
+                content
             }
         }
         }

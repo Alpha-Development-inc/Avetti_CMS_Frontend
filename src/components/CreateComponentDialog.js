@@ -1,35 +1,36 @@
 import { Stepper,Step,StepLabel,Button,Box } from "@material-ui/core";
-import React,{useState} from 'react';
+import React,{useRef, useState} from 'react';
 import ChooseContentType from "./ChooseContentType";
 import CreateImageContent from "./CreateImageContent";
-import CreateTextComponent from './CreateTextContent'
+import CreateTextContent from "./CreateTextContent";
+
+
 const CreateComponentDialog=(props)=>{
     
     const [activeStep, setActiveStep] = useState(0);
-    const [component, setComponent] = useState({
-      type: '',
-      content: ''
-    })
+    const [type, setType] = useState('');
     const steps = ['Select Content Type', 'Add content '];
 
+    const imageRef = useRef();
+    const textRef = useRef();
+
     const getStepContent = (stepIndex) => {
-      console.log("rendering.....");
       switch (stepIndex) {
         case 0:
           return ( 
           <ChooseContentType setType={changeContentType}/>
           );
         case 1:
-          switch(component.type) {
+          switch(type) {
             case 'image':
               return (
-                <CreateImageContent/>
+                <CreateImageContent ref={imageRef} handleClose={props.handleClose}/>
               );
             case 'text':
               return (
                 <div>
                   
-                  <CreateTextComponent/>
+                  <CreateTextContent/>
                 </div>
               );
             default:
@@ -45,20 +46,24 @@ const CreateComponentDialog=(props)=>{
     }
 
     const changeContentType = (newType) => {
-      setComponent({...component, type : newType});
-      console.log(component);
+      setType(newType);
     }
 
     const handleNext = () => {
+      if (activeStep < steps.length - 1){
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      }
+      else{
+        imageRef.current.uploadImageComponent();
+      }
+        
       };
     
       const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
       };
     return(
-        <Box paddingX="30px">
-          <h4>{component.type}</h4>
+        <Box paddingX="30px" height="400px" display="flex" flexDirection="column">
           <Stepper activeStep={activeStep}>
               {steps.map((label) => (
                   <Step key={label}>
@@ -66,7 +71,7 @@ const CreateComponentDialog=(props)=>{
                   </Step>
           ))}
           </Stepper>
-          <div>
+          <div className="spacer">
               {getStepContent(activeStep)}
           </div>
           <Box display="flex" flexDirection="row" marginY="20px">
@@ -78,7 +83,7 @@ const CreateComponentDialog=(props)=>{
             </Button>
             <Button variant="contained" color="primary"
             onClick={handleNext}
-            disabled={component.type === ''}>
+            disabled={type === ''}>
               {activeStep === steps.length - 1 ? 'Save' : 'Next'}
             </Button>
             <span className="spacer"/>
