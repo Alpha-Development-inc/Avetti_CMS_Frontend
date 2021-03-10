@@ -57,7 +57,10 @@ const Row =(props)=>{
             <Box height="33%" border={2} borderColor="primary.main" borderRadius="10px" marginTop="5px">
                 <Paper elevation={3}>
                     <Box display="flex" flexDirection="row" justifyContent="flex-end">
-                        <Button color="primary" onClick={handleOpenDialog} startIcon={<AddIcon/>}>Add Component</Button>
+                        <Button color="primary" onClick={handleOpenDialog} 
+                            disabled={props.rowComponents.length >= 2} startIcon={<AddIcon/>}>
+                                 Add Component
+                        </Button>
                         <Dialog
                             open={open} 
                             onClose={handleCloseDialog}

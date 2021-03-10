@@ -30,7 +30,7 @@ const CreateComponentDialog=(props)=>{
               return (
                 <div>
                   
-                  <CreateTextContent/>
+                  <CreateTextContent ref={textRef} handleClose={props.handleClose}/>
                 </div>
               );
             default:
@@ -53,9 +53,15 @@ const CreateComponentDialog=(props)=>{
       if (activeStep < steps.length - 1){
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
-      else{
-        imageRef.current.uploadImageComponent();
+        else{
+        if (type === 'image'){
+          imageRef.current.uploadImageComponent();
+        }
+        else if ( type === 'text'){
+          textRef.current.convertContentToHTML();
+        }
       }
+      
         
       };
     

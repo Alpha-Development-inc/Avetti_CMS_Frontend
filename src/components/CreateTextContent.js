@@ -1,44 +1,79 @@
-import React, { useState } from "react";
+import React, { forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react";
 import { EditorState} from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 //import 'draft-js/dist/Draft.css';
-import ReactDOM from 'react-dom';
 import { Box } from "@material-ui/core";
 import { convertToHTML } from 'draft-convert';
-import DOMPurify from 'dompurify';
+import { useMutation, gql } from "@apollo/client";
+import PageContext from "../contexts/PageContext";
+import RowContext from "../contexts/RowContext";
+import Loading from './Loading';
 
 
 
-// const CREATE_TEXT_COMPONENT = gql`
-// mutation CreateTextComponent($text: Text, $rowIndex: Int!, $pageId: String!) {
-//   createImageComponent(Text: $text, rowIndex: $rowIndex, pageId: $pageId){
-//       title
-//   }
-// }
-//`
-const CreateTextContent = (props) => {
+const CREATE_TEXT_COMPONENT = gql`
+mutation CreateTextComponent($text: String!, $rowIndex: Int!, $pageId: String!) {
+  createTextComponent(text: $text, rowIndex: $rowIndex, pageId: $pageId){
+    id
+    title
+    contentRows{
+        contentComponents{
+            type
+            content
+        }
+    }
+  }
+}
+`
+
+const CreateTextContent = forwardRef((props, ref) => {
+
   const [editorState, setEditorState] = useState(
     () => EditorState.createEmpty(),
   );
+
   const  [convertedContent, setConvertedContent] = useState(null);
+  const [update, {data, error, loading}] = useMutation(CREATE_TEXT_COMPONENT);
+
   const handleEditorChange = (state) => {
     setEditorState(state);
-    console.log("1"+editorState);
-    convertContentToHTML();
-    console.log("2"+editorState);
   }
   const convertContentToHTML = () => {
     let currentContentAsHTML = convertToHTML(editorState.getCurrentContent());
     setConvertedContent(currentContentAsHTML);
-    console.log("final converted"+convertedContent);
   }
 
-  const createMarkup = (html) => {
-    // return  {
-    //   __html: DOMPurify.sanitize(html)
-    // }
-  }
+  const pageId = useContext(PageContext);
+  const rowIndex = useContext(RowContext); 
+
+  useImperativeHandle(ref, () => ({
+
+    convertContentToHTML(){
+      let currentContentAsHTML = convertToHTML(editorState.getCurrentContent());
+      setConvertedContent(currentContentAsHTML);
+    }
+
+  }));
+
+  useEffect(() => {
+    if (convertedContent){
+      update({variables:{
+        text: convertedContent,
+        rowIndex: rowIndex,
+        pageId: pageId
+      }});
+    }
+  },[convertedContent]);
+
+  useEffect(() => {
+    if (!loading && data){
+        props.handleClose();
+    }
+  }, [data, loading]);
+
+  if (loading) return (<Loading/>);
+
   return (
     <Box display="flex" justifyContent="center">
       <div className="App">
@@ -52,10 +87,9 @@ const CreateTextContent = (props) => {
           editorClassName="editor-class"
           toolbarClassName="toolbar-class"
         />
-        <div className="preview" dangerouslySetInnerHTML={createMarkup(convertedContent)}></div>
       </div>
     </Box>
   );
-  };
+  });
 
 export default CreateTextContent;
