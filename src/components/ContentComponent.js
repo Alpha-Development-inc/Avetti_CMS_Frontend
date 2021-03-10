@@ -7,6 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { gql, useMutation } from '@apollo/client';
 import { RowProvider } from '../contexts/RowContext';
 import { IKImage } from 'imagekitio-react';
+import DOMPurify from 'dompurify';
 
 const ContentComponent =(props)=>{
 
@@ -50,13 +51,24 @@ const ContentComponent =(props)=>{
     // const handleCloseDialog=()=>{
     //     setOpen(false);
     // }
+
+    const createMarkup = (html) => {
+        return  {
+          __html: DOMPurify.sanitize(html)
+        }
+      }
+
     return(
 
             <Box width="45%" margin="5px">
                 <Paper elevation={3}>
-                    <Box display="flex" justifyContent="center">
+                    <Box>
                         {props.component.type === 'image' &&
                             <IKImage path={props.component.content} width="200"/>
+                            
+                        }
+                        {props.component.type === 'text' &&
+                            <div dangerouslySetInnerHTML={createMarkup(props.component.content)}></div>   
                         }
                     </Box>
                 </Paper>

@@ -53,9 +53,13 @@ const CreateImageContent = forwardRef((props, ref) => {
     if (loading) return (<Loading/>);
 
     return (
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" flexDirection="column" alignItems="center">
 
             <input type="file" placeholder="Choose a file" onChange={handleChange}/>
+
+            {(image) &&
+            <img alt="preview" src={URL.createObjectURL(image)} width="200"/>
+            }
 
 
             {/* <IKUpload
