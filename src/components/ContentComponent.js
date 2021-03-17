@@ -1,4 +1,4 @@
-import { Box, Button, Paper,Dialog,DialogActions } from '@material-ui/core';
+import { Box, Button, Paper,Dialog,DialogActions, Card, CardHeader, IconButton, CardContent, Menu, MenuItem } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom'
 import CreateComponentDialog from './CreateComponentDialog'
@@ -8,10 +8,27 @@ import { gql, useMutation } from '@apollo/client';
 import { RowProvider } from '../contexts/RowContext';
 import { IKImage } from 'imagekitio-react';
 import DOMPurify from 'dompurify';
+import { MoreVert, ZoomIn, ZoomOut } from '@material-ui/icons';
+import ImageComponent from './ImageComponent';
 
 const ContentComponent =(props)=>{
 
     const [rowComponents,setRowComponents]=useState([]);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [status, setStatus] = useState('default');
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleEditImage = () => {
+        setStatus('editImage');
+        setAnchorEl(null);
+    }
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
 
 
     //------------------TO BE IMPLEMENTED--------------------
@@ -60,13 +77,18 @@ const ContentComponent =(props)=>{
 
     return(
 
-            <Box width="45%" margin="5px">
+            <Box margin="5px">
+
+                {props.component.type === 'image' &&
+                    
+                    <ImageComponent content={props.component.content} handleDelete={props.handleDelete}/>
+                }
+
+
+
                 <Paper elevation={3}>
                     <Box>
-                        {props.component.type === 'image' &&
-                            <IKImage path={props.component.content} width="200"/>
-                            
-                        }
+                        
                         {props.component.type === 'text' &&
                             <div dangerouslySetInnerHTML={createMarkup(props.component.content)}></div>   
                         }
