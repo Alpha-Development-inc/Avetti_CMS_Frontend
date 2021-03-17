@@ -8,6 +8,7 @@ import { gql, useMutation } from '@apollo/client';
 import { RowProvider } from '../contexts/RowContext';
 import ContentComponent from './ContentComponent';
 import PageContext from '../contexts/PageContext';
+import CreateTextContent from './CreateTextContent';
 
 const Row =(props)=>{
     const [rowComponents,setRowComponents]=useState([]);
@@ -73,9 +74,11 @@ const Row =(props)=>{
                     </Box>
                 </Paper>
 
-                <Box display="flex" flexDirection="row" justifyContent="center">
+                <Box display="flex" flexDirection="row" id = "rowComponent" justifyContent="center">
+                    
                     {props.rowComponents.map((c)=>(
                         <ContentComponent component={c}/>
+                        
                     ))}
                 </Box>
 
