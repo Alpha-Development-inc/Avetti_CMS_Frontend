@@ -8,88 +8,30 @@ import ReactDOM from "react-dom";
 
 const CreateComponentDialog=(props)=>{
     
-    const [activeStep, setActiveStep] = useState(0);
     const [type, setType] = useState('');
-    const steps = ['Select Content Type','add content'];
-
-    const imageRef = useRef();
-    const textRef = useRef();
-
-    const getStepContent = (stepIndex) => {
-      switch (stepIndex) {
-        case 0:
-          return ( 
-          <ChooseContentType setType={changeContentType}/>
-          );
-        case 1:
-          switch(type) {
-            case 'image':
-              return (
-                <CreateImageContent ref={imageRef} handleClose={props.handleClose}/>
-              );
-            case 'text':
-              ReactDOM.render(<CreateTextContent />,document.getElementById('rowComponent'));
-              props.handleClose();
-              
-          }
-            default:
-              return (
-                <Box textAlign="center"><p>Content type is not selected</p></Box>
-              );
-          }
-          
-        
-        // default:
-        //   return 'Unknown stepIndex';
-      }
-    
 
     const changeContentType = (newType) => {
       setType(newType);
     }
 
-    const handleNext = () => {
-      if (activeStep < steps.length - 1){
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    const handleSelect = () => {
+      if (type === 'image'){
+        props.handleChangeStatus('createImage');
       }
-        else{
-        if (type === 'image'){
-          imageRef.current.uploadImageComponent();
-        }
-        else if ( type === 'text'){
-          props.handleClose();
-        }
+      else if ( type === 'text'){
+        props.handleChangeStatus('createText');
       }
-      
-        
+      props.handleClose();    
       };
     
-      const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-      };
     return(
         <Box paddingX="30px" height="400px" display="flex" flexDirection="column">
-          <Stepper activeStep={activeStep}>
-              {steps.map((label) => (
-                  <Step key={label}>
-                      <StepLabel>{label}</StepLabel>
-                  </Step>
-          ))}
-          </Stepper>
-          <div className="spacer">
-              {getStepContent(activeStep)}
-          </div>
+          <ChooseContentType setType={changeContentType}/>
           <Box display="flex" flexDirection="row" marginY="20px">
-            <Button
-              disabled={activeStep === 0}
-              onClick={handleBack}               
-            >
-              Back
-            </Button>
             <Button variant="contained" color="primary"
-            onClick={handleNext}
+            onClick={handleSelect}
             disabled={type === ''}>
-              {activeStep === steps.length - 1 ? 'Save' : 'Next'}
+              Select
             </Button>
             <span className="spacer"/>
             <Button onClick={props.handleClose}>Close</Button>

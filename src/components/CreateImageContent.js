@@ -1,5 +1,5 @@
 import { useMutation, gql } from "@apollo/client";
-import { Box } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
 import React, { forwardRef, useContext, useEffect, useImperativeHandle, useState } from "react";
 import PageContext from "../contexts/PageContext";
 import RowContext from "../contexts/RowContext";
@@ -20,7 +20,7 @@ mutation CreateImageComponent($image: Upload, $rowIndex: Int!, $pageId: String!)
 }
 `;
 
-const CreateImageContent = forwardRef((props, ref) => {
+const CreateImageContent = (props) => {
 
     const [image, setImage] = useState(null);
     const pageId = useContext(PageContext);
@@ -32,21 +32,17 @@ const CreateImageContent = forwardRef((props, ref) => {
         setImage(e.target.files[0]);
     }
 
-    useImperativeHandle(ref, () => ({
-
-        uploadImageComponent(){
-            update({variables:{
-                image: image,
-                rowIndex: rowIndex,
-                pageId: pageId
-            }});
-        }
-
-    }));
+    const handleSave = () => {
+        update({variables:{
+            image: image,
+            rowIndex: rowIndex,
+            pageId: pageId
+        }});
+    }
 
     useEffect(() => {
         if (!loading && data){
-            props.handleClose();
+            props.handleChangeStatus();
         }
     }, [data, loading]);
 
@@ -65,11 +61,12 @@ const CreateImageContent = forwardRef((props, ref) => {
             {/* <IKUpload
                 fileName="test-upload.png"
                 /> */}
+            <Button variant="contained" onClick={handleSave} size="small" color="primary">Save</Button>
 
 
         </Box>
      
     );
-  });
+  };
 
 export default CreateImageContent;
