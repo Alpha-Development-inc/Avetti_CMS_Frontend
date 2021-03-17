@@ -3,13 +3,14 @@ import React,{useRef, useState} from 'react';
 import ChooseContentType from "./ChooseContentType";
 import CreateImageContent from "./CreateImageContent";
 import CreateTextContent from "./CreateTextContent";
+import ReactDOM from "react-dom";
 
 
 const CreateComponentDialog=(props)=>{
     
     const [activeStep, setActiveStep] = useState(0);
     const [type, setType] = useState('');
-    const steps = ['Select Content Type', 'Add content '];
+    const steps = ['Select Content Type','add content'];
 
     const imageRef = useRef();
     const textRef = useRef();
@@ -27,12 +28,10 @@ const CreateComponentDialog=(props)=>{
                 <CreateImageContent ref={imageRef} handleClose={props.handleClose}/>
               );
             case 'text':
-              return (
-                <div>
-                  
-                  <CreateTextContent ref={textRef} handleClose={props.handleClose}/>
-                </div>
-              );
+              ReactDOM.render(<CreateTextContent />,document.getElementById('rowComponent'));
+              props.handleClose();
+              
+          }
             default:
               return (
                 <Box textAlign="center"><p>Content type is not selected</p></Box>
@@ -40,10 +39,10 @@ const CreateComponentDialog=(props)=>{
           }
           
         
-        default:
-          return 'Unknown stepIndex';
+        // default:
+        //   return 'Unknown stepIndex';
       }
-    }
+    
 
     const changeContentType = (newType) => {
       setType(newType);
@@ -58,7 +57,7 @@ const CreateComponentDialog=(props)=>{
           imageRef.current.uploadImageComponent();
         }
         else if ( type === 'text'){
-          textRef.current.convertContentToHTML();
+          props.handleClose();
         }
       }
       
@@ -99,4 +98,5 @@ const CreateComponentDialog=(props)=>{
         </Box>
     );
 }
+
 export default CreateComponentDialog;

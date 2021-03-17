@@ -8,6 +8,7 @@ import { gql, useMutation } from '@apollo/client';
 import { RowProvider } from '../contexts/RowContext';
 import ContentComponent from './ContentComponent';
 import PageContext from '../contexts/PageContext';
+import CreateTextContent from './CreateTextContent';
 import { ComponentProvider } from '../contexts/ComponentContext';
 
 const Row =(props)=>{
