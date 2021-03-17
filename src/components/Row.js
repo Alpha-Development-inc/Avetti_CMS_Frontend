@@ -8,9 +8,11 @@ import { gql, useMutation } from '@apollo/client';
 import { RowProvider } from '../contexts/RowContext';
 import ContentComponent from './ContentComponent';
 import PageContext from '../contexts/PageContext';
+import { ComponentProvider } from '../contexts/ComponentContext';
 
 const Row =(props)=>{
-    const [rowComponents,setRowComponents]=useState([]);
+
+    const [rowComponents,setRowComponents] = useState(props.rowComponents);
     const [open, setOpen] = useState(false);
     const pageId = useContext(PageContext);
 
@@ -51,10 +53,14 @@ const Row =(props)=>{
     const handleCloseDialog=()=>{
         setOpen(false);
     }
+    const handleDeleteComponent = (index) => {
+        setRowComponents(rowComponents.filter((c, i) => (i != index)));
+    }
+
     return(
 
         <RowProvider value={props.rowIndex}>
-            <Box height="33%" border={2} borderColor="primary.main" borderRadius="10px" marginTop="5px">
+            <Box height="300px" border={2} borderColor="primary.main" borderRadius="10px" marginTop="5px">
                 <Paper elevation={3}>
                     <Box display="flex" flexDirection="row" justifyContent="flex-end">
                         <Button color="primary" onClick={handleOpenDialog} 
@@ -73,9 +79,11 @@ const Row =(props)=>{
                     </Box>
                 </Paper>
 
-                <Box display="flex" flexDirection="row" justifyContent="center">
-                    {props.rowComponents.map((c)=>(
-                        <ContentComponent component={c}/>
+                <Box display="flex" flexDirection="row" justifyContent="space-around">
+                    {rowComponents.map((c, index)=>(
+                        <ComponentProvider value={index}>
+                            <ContentComponent component={c} handleDelete={handleDeleteComponent}/>
+                        </ComponentProvider>
                     ))}
                 </Box>
 
