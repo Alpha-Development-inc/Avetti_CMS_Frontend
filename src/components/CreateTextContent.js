@@ -30,7 +30,7 @@ mutation CreateTextComponent($text: String!, $rowIndex: Int!, $pageId: String!) 
 const CreateTextContent = (props) => {
 
   const [editorState, setEditorState] = useState(
-    () => EditorState.createEmpty(),
+    () => {EditorState.createEmpty()}
   );
 
   const  [convertedContent, setConvertedContent] = useState(null);
