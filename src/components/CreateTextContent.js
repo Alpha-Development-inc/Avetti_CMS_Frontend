@@ -74,6 +74,12 @@ const CreateTextContent = (props) => {
           wrapperClassName="wrapper-class"
           editorClassName="editor-class"
           toolbarClassName="toolbar-class"
+          toolbar={{
+            options: ['inline', 'fontSize', 'fontFamily', 'list', 'textAlign'],
+            inline: {
+              options: ['bold', 'italic', 'underline', 'monospace']
+            }
+          }}
         />
       </div>
       <Box display="flex" justifyContent="flex-end">
