@@ -67,7 +67,10 @@ const Row =(props)=>{
     return(
 
         <RowProvider value={props.rowIndex}>
-            <Box height="300px" border={2} borderColor="primary.main" borderRadius="10px" marginTop="5px">
+            <Paper elevation="3">
+
+            
+            <Box height="300px" marginTop="5px">
                 <Paper elevation={3}>
                     <Box display="flex" flexDirection="row" justifyContent="flex-end">
                         <Button color="primary" onClick={handleOpenDialog} 
@@ -101,6 +104,7 @@ const Row =(props)=>{
                 </Box>
 
             </Box>
+            </Paper>
         </RowProvider>
 
         
