@@ -10,11 +10,13 @@ import ContentComponent from './ContentComponent';
 import PageContext from '../contexts/PageContext';
 import CreateTextContent from './CreateTextContent';
 import { ComponentProvider } from '../contexts/ComponentContext';
+import CreateImageContent from './CreateImageContent';
 
 const Row =(props)=>{
 
     const [rowComponents,setRowComponents] = useState(props.rowComponents);
     const [open, setOpen] = useState(false);
+    const [status, setStatus] = useState('default');
     const pageId = useContext(PageContext);
 
     const DELETE_ROW = gql`
@@ -54,6 +56,10 @@ const Row =(props)=>{
     const handleCloseDialog=()=>{
         setOpen(false);
     }
+    const handleChangeStatus = (newStatus) => {
+        setStatus(newStatus);
+        console.log(status);
+    }
     const handleDeleteComponent = (index) => {
         setRowComponents(rowComponents.filter((c, i) => (i != index)));
     }
@@ -61,11 +67,14 @@ const Row =(props)=>{
     return(
 
         <RowProvider value={props.rowIndex}>
-            <Box height="300px" border={2} borderColor="primary.main" borderRadius="10px" marginTop="5px">
+            <Paper elevation="3">
+
+            
+            <Box height="300px" marginTop="5px">
                 <Paper elevation={3}>
                     <Box display="flex" flexDirection="row" justifyContent="flex-end">
                         <Button color="primary" onClick={handleOpenDialog} 
-                            disabled={props.rowComponents.length >= 2} startIcon={<AddIcon/>}>
+                            disabled={props.rowComponents.length >= 2 || status !== 'default'} startIcon={<AddIcon/>}>
                                  Add Component
                         </Button>
                         <Dialog
@@ -74,21 +83,28 @@ const Row =(props)=>{
                             aria-labelledby="createcomponentdialog"
                             fullWidth
                             maxWidth="sm">
-                            <CreateComponentDialog handleClose={handleCloseDialog}/>
+                            <CreateComponentDialog handleClose={handleCloseDialog} handleChangeStatus={handleChangeStatus}/>
                         </Dialog>
                         <Button color="secondary" startIcon={<DeleteIcon/>} onClick={handleDelete}>Delete</Button>
                     </Box>
                 </Paper>
 
-                <Box display="flex" flexDirection="row" justifyContent="space-around">
+                <Box display="flex" flexDirection="row" justifyContent="space-around" id="contentRow">
                     {rowComponents.map((c, index)=>(
                         <ComponentProvider value={index}>
                             <ContentComponent component={c} handleDelete={handleDeleteComponent}/>
                         </ComponentProvider>
                     ))}
+                    {status === 'createText' &&
+                        <CreateTextContent handleChangeStatus={handleChangeStatus}/>
+                    }
+                    {status === 'createImage' &&
+                        <CreateImageContent handleChangeStatus={handleChangeStatus}/>
+                    }
                 </Box>
 
             </Box>
+            </Paper>
         </RowProvider>
 
         

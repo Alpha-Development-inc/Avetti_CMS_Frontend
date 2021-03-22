@@ -17,6 +17,7 @@ const ImageComponent =(props)=>{
 
     const [anchorEl, setAnchorEl] = useState(null);
     const [status, setStatus] = useState('default');
+    const [showMenu, setShowMenu] = useState(false);
     const [width, setWidth] = useState(0);
 
     const imgRef = createRef();
@@ -90,6 +91,18 @@ const ImageComponent =(props)=>{
         props.handleDelete(componentIndex);
     }
 
+    const handleMouseEnter = () => {
+        if (status === 'default'){
+            setStatus('showMenu');
+        }
+    }
+
+    const handleMouseLeave = () => {
+        if (status === 'showMenu'){
+            setStatus('default');
+        }
+    }
+
     useEffect(() => {
 
         if (!loading && data){
@@ -102,43 +115,28 @@ const ImageComponent =(props)=>{
     return(
 
         <Paper>
-            <Box>
-                {status === 'default' && 
-                    <Box display="flex" justifyContent="flex-end">
-                        <IconButton aria-controls="setings-menu" aria-haspopup="true"
-                            aria-label="settings" onClick={handleClick}>
-                            <MoreVert/>
-                        </IconButton>
-                    </Box>
-                }
-                <Menu
-                    id="settings-menu"
-                    anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                >
-                    <MenuItem onClick={handleEditImage}>Resize</MenuItem>
-                    <MenuItem onClick={handleDelete}>Delete</MenuItem>
-                </Menu>
-                {status === 'editImage' &&
-                    <Box display="flex" justifyContent="space-between">
-                        <Box>
-                            <IconButton aria-label="increase size" onClick={increaseScale}
-                            disabled={width >= 250}>
-                                <ZoomIn/>
-                            </IconButton>
-                            <IconButton aria-label="decrease size" onClick={decreaseScale}
-                            disabled={width <= 150}>
-                                <ZoomOut/>
-                            </IconButton>
-                        </Box>
-                        <Button size="small" color="primary" onClick={handleResize}>Save</Button> 
+            <Box position="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} margin="auto">
+
+                
+                {status === 'showMenu' && 
+                    <Box className="popup-menu">
+                        <Button variant="contained" onClick={handleEditImage}>Resize</Button>
+                        <Button variant="contained" onClick={handleDelete}>Delete</Button>
                     </Box> 
                 }
-            </Box>
+
+                {status === 'editImage' &&
+                    <Box className="popup-menu">
+                        <Button variant="contained" startIcon={<ZoomIn/>} onClick={increaseScale}
+                        disabled={width >= 250}>Increase</Button>
+                        <Button variant="contained" startIcon={<ZoomOut/>} onClick={decreaseScale}
+                        disabled={width <= 150}>Decrease</Button>
+                        <Button size="small" variant="contained" color="primary" onClick={handleResize}>Save</Button>
+                    </Box> 
+                }
             {/* <IKImage path={props.content} ref={imgRef} width={width != 0 ? width : null}/> */}
             <img alt="image" src={props.content} ref={imgRef} width={width} onLoad={handleImageLoad}/>
+            </Box>
         </Paper>                    
     )
 }

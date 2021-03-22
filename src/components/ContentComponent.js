@@ -79,9 +79,12 @@ const ContentComponent =(props)=>{
 
             <Box margin="5px">
 
+                
+
                 {props.component.type === 'image' &&
                     
                     <ImageComponent content={props.component.content} handleDelete={props.handleDelete}/>
+
                 }
 
 

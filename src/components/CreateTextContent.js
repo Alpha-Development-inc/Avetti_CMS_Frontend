@@ -3,7 +3,7 @@ import { EditorState} from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 //import 'draft-js/dist/Draft.css';
-import { Box } from "@material-ui/core";
+import { Box, Button } from "@material-ui/core";
 import { convertToHTML } from 'draft-convert';
 import { useMutation, gql } from "@apollo/client";
 import PageContext from "../contexts/PageContext";
@@ -27,7 +27,7 @@ mutation CreateTextComponent($text: String!, $rowIndex: Int!, $pageId: String!) 
 }
 `
 
-const CreateTextContent = forwardRef((props, ref) => {
+const CreateTextContent = (props) => {
 
   const [editorState, setEditorState] = useState(
     () => EditorState.createEmpty(),
@@ -47,15 +47,6 @@ const CreateTextContent = forwardRef((props, ref) => {
   const pageId = useContext(PageContext);
   const rowIndex = useContext(RowContext); 
 
-  useImperativeHandle(ref, () => ({
-
-    convertContentToHTML(){
-      let currentContentAsHTML = convertToHTML(editorState.getCurrentContent());
-      setConvertedContent(currentContentAsHTML);
-    }
-
-  }));
-
   useEffect(() => {
     if (convertedContent){
       update({variables:{
@@ -68,28 +59,34 @@ const CreateTextContent = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (!loading && data){
-        props.handleClose();
+        props.handleChangeStatus();
     }
   }, [data, loading]);
 
   if (loading) return (<Loading/>);
 
   return (
-    <Box display="flex" justifyContent="center">
+    <Box display="flex" flexDirection="column" justifyContent="center" margin="5px">
       <div className="App">
-        <header className="App-header">
-          enter your text
-        </header>
         <Editor
           editorState={editorState}
           onEditorStateChange={handleEditorChange}
           wrapperClassName="wrapper-class"
           editorClassName="editor-class"
           toolbarClassName="toolbar-class"
+          toolbar={{
+            options: ['inline', 'fontSize', 'fontFamily', 'list', 'textAlign'],
+            inline: {
+              options: ['bold', 'italic', 'underline', 'monospace']
+            }
+          }}
         />
       </div>
+      <Box display="flex" justifyContent="flex-end">
+        <Button variant="contained" color="primary" onClick={convertContentToHTML} size="small">Save</Button> 
+      </Box>
     </Box>
   );
-  });
+  };
 
 export default CreateTextContent;
