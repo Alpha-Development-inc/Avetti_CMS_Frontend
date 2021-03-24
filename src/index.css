@@ -54,3 +54,27 @@ body {
   align-items: center;
   justify-content: space-evenly;
 }
+
+.paper-fullsize{
+  width: 100%;
+  height: 100%;
+}
+
+.text-content{
+  margin-left: 15px;
+}
+
+.toolbar-class{
+  padding-top: 0;
+}
+
+.wrapper-class {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.editor-class {
+  flex: 1 1 auto;
+  border: 1px solid darkblue;
+}

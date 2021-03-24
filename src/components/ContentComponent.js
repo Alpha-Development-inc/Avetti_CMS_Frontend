@@ -1,5 +1,5 @@
 import { Box, Button, Paper,Dialog,DialogActions, Card, CardHeader, IconButton, CardContent, Menu, MenuItem } from '@material-ui/core';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ReactDOM from 'react-dom'
 import CreateComponentDialog from './CreateComponentDialog'
 import AddIcon from '@material-ui/icons/Add';
@@ -11,12 +11,19 @@ import DOMPurify from 'dompurify';
 import { MoreVert, ZoomIn, ZoomOut } from '@material-ui/icons';
 import ImageComponent from './ImageComponent';
 import TextComponent from './TextComponent';
+import ComponentContext from '../contexts/ComponentContext';
+import PageContext from "../contexts/PageContext";
+import RowContext from "../contexts/RowContext";
 
 const ContentComponent =(props)=>{
 
     const [rowComponents,setRowComponents]=useState([]);
     const [anchorEl, setAnchorEl] = useState(null);
     const [status, setStatus] = useState('default');
+
+    const pageId = useContext(PageContext);
+    const rowIndex = useContext(RowContext);
+    const componentIndex = useContext(ComponentContext); 
 
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
@@ -31,44 +38,26 @@ const ContentComponent =(props)=>{
       setAnchorEl(null);
     };
 
+    const DELETE_COMPONENT = gql`
+    mutation DeleteComponent($componentIndex: Int!, $rowIndex: Int!, $pageId: String!) {
+        deleteComponent(componentIndex: $componentIndex, rowIndex: $rowIndex, pageId: $pageId){
+            title
+            contentComponents{
+                type
+                content
+            }
+        }
+      }
+    `;
 
-    //------------------TO BE IMPLEMENTED--------------------
-    // const DELETE_COMPONENT = gql`
-    //     mutation DeleteComponent($rowIndex: Int!, $pageId: String!) {
-    //         deleteComponent(rowIndex: $rowIndex, pageId: $pageId){
-    //             id
-    //             title
-    //             contentRows{
-    //                 contentComponents{
-    //                     text
-    //                 }
-    //             }
-    //         }
-    //     }
-    // `;
+    const [deleteComponent, { data, error, loading }] = useMutation(DELETE_COMPONENT);
 
-    // const [deleteComponent, { data, error, loading }] = useMutation(DELETE_COMPONENT);
+    const handleDelete = () => {
+      deleteComponent({variables: { componentIndex: componentIndex, rowIndex: rowIndex, pageId: pageId}});
+      props.handleDelete(componentIndex);
+    }
 
-    // const handleDelete = () => {
-    //     console.log(props.rowIndex);
-    //     deleteRow({variables: { rowIndex: props.rowIndex, pageId: props.pageId}});
-    // }
 
-    // useEffect(() => {
-
-    //     if (!loading && data){
-    //         console.log("row deleted...")
-    //         console.log(data);
-    //     }
-        
-    // }, [data, loading]);
-
-    // const handleOpenDialog=()=>{
-    //     setOpen(true);
-    // }
-    // const handleCloseDialog=()=>{
-    //     setOpen(false);
-    // }
 
     const createMarkup = (html) => {
         return  {
@@ -78,27 +67,21 @@ const ContentComponent =(props)=>{
 
     return(
 
-            <Box margin="5px">
+            <Box margin="5px" width="45%" height="100%">
 
                 
 
                 {props.component.type === 'image' &&
                     
-                    <ImageComponent content={props.component.content} handleDelete={props.handleDelete}/>
+                    <ImageComponent content={props.component.content} handleDelete={handleDelete}/>
 
                 }
 
 
+                {props.component.type === 'text' &&
+                    <TextComponent content={props.component.content} handleDelete={handleDelete}/> 
+                }
 
-                <Paper elevation={3}>
-                    <Box>
-                        
-                        {props.component.type === 'text' &&
-                            <TextComponent content={props.component.content} handleDelete={props.handleDelete}/>
-                            //<div dangerouslySetInnerHTML={createMarkup(props.component.content)}></div>   
-                        }
-                    </Box>
-                </Paper>
             </Box>
 
         
