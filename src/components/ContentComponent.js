@@ -10,6 +10,7 @@ import { IKImage } from 'imagekitio-react';
 import DOMPurify from 'dompurify';
 import { MoreVert, ZoomIn, ZoomOut } from '@material-ui/icons';
 import ImageComponent from './ImageComponent';
+import TextComponent from './TextComponent';
 
 const ContentComponent =(props)=>{
 
@@ -93,7 +94,8 @@ const ContentComponent =(props)=>{
                     <Box>
                         
                         {props.component.type === 'text' &&
-                            <div dangerouslySetInnerHTML={createMarkup(props.component.content)}></div>   
+                            <TextComponent content={props.component.content} handleDelete={props.handleDelete}/>
+                            //<div dangerouslySetInnerHTML={createMarkup(props.component.content)}></div>   
                         }
                     </Box>
                 </Paper>
