@@ -18,31 +18,13 @@ import CreateTextContent from './CreateTextContent';
 
 
 const TextComponent=(props)=>{
-    //const [status, setStatus] = useState('default');
-    const [anchorEl, setAnchorEl] = useState(null);
+
     const [status, setStatus] = useState('default');
     const [showMenu, setShowMenu] = useState(false);
 
 
-    const DELETE_COMPONENT = gql`
-    mutation DeleteComponent($componentIndex: Int!, $rowIndex: Int!, $pageId: String!) {
-        deleteComponent(componentIndex: $componentIndex, rowIndex: $rowIndex, pageId: $pageId){
-            title
-            contentComponents{
-                type
-                content
-            }
-        }
-    }
-`;
-
-const [deleteComponent, { data: deleteData, error: deleteError, loading: deleteLoading }] = useMutation(DELETE_COMPONENT);
-
-
 const handleDelete = () => {
-    deleteComponent({variables: { componentIndex: componentIndex, rowIndex: rowIndex, pageId: pageId}});
-    setAnchorEl(null);
-    props.handleDelete(componentIndex);
+    props.handleDelete();
 }
     const handleUpdate=()=>{
         return(
@@ -52,7 +34,6 @@ const handleDelete = () => {
 
     const handleEditText = () => {
         setStatus('editText');
-        setAnchorEl(null);
     }
 
     
@@ -68,12 +49,6 @@ const handleDelete = () => {
         }
     }
 
-  
-
-    const pageId = useContext(PageContext);
-    const rowIndex = useContext(RowContext);
-    const componentIndex = useContext(ComponentContext); 
-
 
     const createMarkup = (html) => {
         return  {
@@ -85,27 +60,28 @@ const handleDelete = () => {
         console.log(status);
     }
       return(
-        <Paper>
-        <Box position="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} margin="auto">
+            <Paper className="paper-fullsize">
+                <Box position="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} 
+                margin="auto" height="95%" widht="95%" paddingTop="15px">
+                    {status === 'showMenu' && 
+                        <Box className="popup-menu">
+                            <Button variant="contained" onClick={handleEditText}>Edit</Button>
+                            <Button variant="contained" onClick={handleDelete}>Delete</Button>
+                        </Box> 
+                    }
+                    {status === 'editText' && 
+                    
+                        <CreateTextContent mode="edit" content={props.content} handleChangeStatus={handleChangeStatus}/>
+                        
+                    }
 
-            
-            {status === 'showMenu' && 
-                <Box className="popup-menu">
-                    <Button variant="contained" onClick={handleEditText}>Update</Button>
-                    <Button variant="contained" onClick={handleDelete}>Delete</Button>
-                </Box> 
-            }
-             {status === 'editText' && 
-               
-                    <CreateTextContent handleChangeStatus={handleChangeStatus}/>
-                
-            }
-
-            
-            <div dangerouslySetInnerHTML={createMarkup(props.content)}></div> 
+                    {status !== 'editText' && 
+                        <div className="text-content" dangerouslySetInnerHTML={createMarkup(props.content)}></div> 
+                    }
+                    
+                </Box>
+            </Paper>      
         
-        </Box>
-    </Paper>      
       
       )
 }
