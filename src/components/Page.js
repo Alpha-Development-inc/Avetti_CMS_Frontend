@@ -9,6 +9,7 @@ import CreateRow from './CreateRow';
 import CreatePage from './CreatePage';
 import Loading from './Loading';
 import { PageProvider } from '../contexts/PageContext';
+import { RefreshProvider } from '../contexts/RefreshContext';
 
 const Page =(props)=>{
 
@@ -29,11 +30,15 @@ const Page =(props)=>{
     const [page,setPage]=useState({
         contentRows:[]
     });
+    const [refresh, setRefresh] = useState(true);
 
     const {loading, error, data } = useQuery(PAGE);
 
+
     useEffect(()=>{
         if (!loading && data){
+            console.log('page loaded...');
+            console.log(data.page);
             setPage(data.page);
         }
     },[loading, data]);
@@ -50,12 +55,14 @@ const Page =(props)=>{
 
     return(
         <PageProvider value={page.id}>
-            <Box height="100%" display="flex" flexDirection="column" width="60%" marginX="auto">
-                {page.contentRows.map((g, index)=>(
-                <Row rowIndex={index} rowComponents={g.contentComponents}/>
-                ))}
-                <CreateRow/>
-            </Box>
+            <RefreshProvider value={setRefresh}>
+                <Box height="100%" display="flex" flexDirection="column" width="60%" marginX="auto">
+                    {page.contentRows.map((g, index)=>(
+                    <Row rowIndex={index} rowComponents={g.contentComponents}/>
+                    ))}
+                    <CreateRow/>
+                </Box>
+            </RefreshProvider>
         </PageProvider>
 
         

@@ -89,14 +89,14 @@ const Row =(props)=>{
                     </Box>
                 </Paper>
 
-                <Box display="flex" flexDirection="row" justifyContent="space-around" id="contentRow">
+                <Box display="flex" flexDirection="row" justifyContent="space-around" id="contentRow" height="85%">
                     {rowComponents.map((c, index)=>(
                         <ComponentProvider value={index}>
                             <ContentComponent component={c} handleDelete={handleDeleteComponent}/>
                         </ComponentProvider>
                     ))}
                     {status === 'createText' &&
-                        <CreateTextContent handleChangeStatus={handleChangeStatus}/>
+                        <CreateTextContent handleChangeStatus={handleChangeStatus} mode='create'/>
                     }
                     {status === 'createImage' &&
                         <CreateImageContent handleChangeStatus={handleChangeStatus}/>

@@ -71,24 +71,8 @@ const ImageComponent =(props)=>{
         setStatus('default');
     }
 
-    const DELETE_COMPONENT = gql`
-        mutation DeleteComponent($componentIndex: Int!, $rowIndex: Int!, $pageId: String!) {
-            deleteComponent(componentIndex: $componentIndex, rowIndex: $rowIndex, pageId: $pageId){
-                title
-                contentComponents{
-                    type
-                    content
-                }
-            }
-        }
-    `;
-
-    const [deleteComponent, { data: deleteData, error: deleteError, loading: deleteLoading }] = useMutation(DELETE_COMPONENT);
-
     const handleDelete = () => {
-        deleteComponent({variables: { componentIndex: componentIndex, rowIndex: rowIndex, pageId: pageId}});
-        setAnchorEl(null);
-        props.handleDelete(componentIndex);
+        props.handleDelete();
     }
 
     const handleMouseEnter = () => {
@@ -103,19 +87,11 @@ const ImageComponent =(props)=>{
         }
     }
 
-    useEffect(() => {
-
-        if (!loading && data){
-            console.log("row deleted...")
-            console.log(data);
-        }
-        
-    }, [data, loading]);
-
     return(
 
-        <Paper>
-            <Box position="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} margin="auto">
+        <Paper className="paper-fullsize">
+            <Box position="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
+            display="flex" justifyContent="center" alignItems="center" height="100%">
 
                 
                 {status === 'showMenu' && 
@@ -134,8 +110,9 @@ const ImageComponent =(props)=>{
                         <Button size="small" variant="contained" color="primary" onClick={handleResize}>Save</Button>
                     </Box> 
                 }
-            {/* <IKImage path={props.content} ref={imgRef} width={width != 0 ? width : null}/> */}
-            <img alt="image" src={props.content} ref={imgRef} width={width} onLoad={handleImageLoad}/>
+            <Box>
+                <img alt="image" src={props.content} ref={imgRef} width={width} onLoad={handleImageLoad}/>
+            </Box>
             </Box>
         </Paper>                    
     )
