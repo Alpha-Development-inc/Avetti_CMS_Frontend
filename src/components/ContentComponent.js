@@ -1,42 +1,20 @@
 import { Box, Button, Paper,Dialog,DialogActions, Card, CardHeader, IconButton, CardContent, Menu, MenuItem } from '@material-ui/core';
 import React, { useState, useEffect, useContext } from 'react';
-import ReactDOM from 'react-dom'
-import CreateComponentDialog from './CreateComponentDialog'
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { gql, useMutation } from '@apollo/client';
-import { RowProvider } from '../contexts/RowContext';
-import { IKImage } from 'imagekitio-react';
-import DOMPurify from 'dompurify';
-import { MoreVert, ZoomIn, ZoomOut } from '@material-ui/icons';
 import ImageComponent from './ImageComponent';
 import TextComponent from './TextComponent';
 import ComponentContext from '../contexts/ComponentContext';
 import PageContext from "../contexts/PageContext";
 import RowContext from "../contexts/RowContext";
+import RefreshContext from '../contexts/RefreshContext';
+import Loading from './Loading';
 
 const ContentComponent =(props)=>{
 
-    const [rowComponents,setRowComponents]=useState([]);
-    const [anchorEl, setAnchorEl] = useState(null);
-    const [status, setStatus] = useState('default');
-
     const pageId = useContext(PageContext);
     const rowIndex = useContext(RowContext);
-    const componentIndex = useContext(ComponentContext); 
-
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-
-    const handleEditImage = () => {
-        setStatus('editImage');
-        setAnchorEl(null);
-    }
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
+    const componentIndex = useContext(ComponentContext);
+    const refreshPage = useContext(RefreshContext);
 
     const DELETE_COMPONENT = gql`
     mutation DeleteComponent($componentIndex: Int!, $rowIndex: Int!, $pageId: String!) {
@@ -54,16 +32,19 @@ const ContentComponent =(props)=>{
 
     const handleDelete = () => {
       deleteComponent({variables: { componentIndex: componentIndex, rowIndex: rowIndex, pageId: pageId}});
-      props.handleDelete(componentIndex);
     }
 
+    useEffect(() => {
 
-
-    const createMarkup = (html) => {
-        return  {
-          __html: DOMPurify.sanitize(html)
-        }
+      if (!loading && data){
+        console.log('component deleted');
+        refreshPage();
       }
+      
+    }, [data, loading]);
+
+    if (loading) {return <Loading/>}
+
 
     return(
 
@@ -71,10 +52,8 @@ const ContentComponent =(props)=>{
 
                 
 
-                {props.component.type === 'image' &&
-                    
+                {props.component.type === 'image' &&      
                     <ImageComponent content={props.component.content} handleDelete={handleDelete}/>
-
                 }
 
 

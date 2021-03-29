@@ -34,11 +34,15 @@ const Page =(props)=>{
 
     const {loading, error, data } = useQuery(PAGE);
 
+    const handleRefresh = () => {
+        console.log('state variable is changed');
+        setRefresh(!refresh);
+    }
 
     useEffect(()=>{
         if (!loading && data){
             console.log('page loaded...');
-            console.log(data.page);
+            console.log(data);
             setPage(data.page);
         }
     },[loading, data]);
@@ -55,10 +59,10 @@ const Page =(props)=>{
 
     return(
         <PageProvider value={page.id}>
-            <RefreshProvider value={setRefresh}>
+            <RefreshProvider value={handleRefresh}>
                 <Box height="100%" display="flex" flexDirection="column" width="60%" marginX="auto">
-                    {page.contentRows.map((g, index)=>(
-                    <Row rowIndex={index} rowComponents={g.contentComponents}/>
+                    {page.contentRows.map((r, index)=>(
+                    <Row rowIndex={index} key={index} row={r}/>
                     ))}
                     <CreateRow/>
                 </Box>

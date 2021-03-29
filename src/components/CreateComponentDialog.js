@@ -25,7 +25,7 @@ const CreateComponentDialog=(props)=>{
       };
     
     return(
-        <Box paddingX="30px" height="400px" display="flex" flexDirection="column">
+        <Box paddingX="30px" display="flex" flexDirection="column">
           <ChooseContentType setType={changeContentType}/>
           <Box display="flex" flexDirection="row" marginY="20px">
             <Button variant="contained" color="primary"

@@ -66,15 +66,51 @@ body {
 
 .toolbar-class{
   padding-top: 0;
+  position: absolute;
+  top: -60px;
+  left: -20%;
+  min-width: 410px;
 }
 
 .wrapper-class {
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
+  max-width: 100%;
 }
 
 .editor-class {
   flex: 1 1 auto;
   border: 1px solid darkblue;
+}
+
+.box-elevated{
+  box-shadow: 3px 3px 5px 6px #ccc;
+}
+
+.control-buttons{
+  padding: 5px;
+  display: flex;
+  position: absolute;
+  bottom: -50px;
+  background-color: white;
+  width: 100%;
+  z-index: 1;
+}
+
+.dropzone {
+  border-width: 2px;
+  border-style: dashed;
+  border-color: #3f51b5;
+  cursor: pointer;
+}
+
+.dropzone-focused {
+  border-width: 2px;
+  border-style: dashed;
+  border-color: white;
+  color: white;
+  background-color: #3f51b5;
+  cursor: pointer;
 }

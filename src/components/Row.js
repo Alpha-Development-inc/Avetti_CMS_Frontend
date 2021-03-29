@@ -11,13 +11,14 @@ import PageContext from '../contexts/PageContext';
 import CreateTextContent from './CreateTextContent';
 import { ComponentProvider } from '../contexts/ComponentContext';
 import CreateImageContent from './CreateImageContent';
+import RefreshContext from '../contexts/RefreshContext';
 
 const Row =(props)=>{
 
-    const [rowComponents,setRowComponents] = useState(props.rowComponents);
     const [open, setOpen] = useState(false);
     const [status, setStatus] = useState('default');
     const pageId = useContext(PageContext);
+    const refresh = useContext(RefreshContext);
 
     const DELETE_ROW = gql`
         mutation DeleteRow($rowIndex: Int!, $pageId: String!) {
@@ -46,6 +47,7 @@ const Row =(props)=>{
         if (!loading && data){
             console.log("row deleted...")
             console.log(data);
+            refresh();
         }
         
     }, [data, loading]);
@@ -56,25 +58,26 @@ const Row =(props)=>{
     const handleCloseDialog=()=>{
         setOpen(false);
     }
+    const handleCloseEditor = () => {
+        setStatus('default');
+    }
+
     const handleChangeStatus = (newStatus) => {
         setStatus(newStatus);
         console.log(status);
-    }
-    const handleDeleteComponent = (index) => {
-        setRowComponents(rowComponents.filter((c, i) => (i != index)));
     }
 
     return(
 
         <RowProvider value={props.rowIndex}>
-            <Paper elevation="3">
+            <Paper elevation={3}>
 
             
             <Box height="300px" marginTop="5px">
                 <Paper elevation={3}>
                     <Box display="flex" flexDirection="row" justifyContent="flex-end">
                         <Button color="primary" onClick={handleOpenDialog} 
-                            disabled={props.rowComponents.length >= 2 || status !== 'default'} startIcon={<AddIcon/>}>
+                            disabled={props.row.contentComponents.length >= 2 || status !== 'default'} startIcon={<AddIcon/>}>
                                  Add Component
                         </Button>
                         <Dialog
@@ -90,16 +93,21 @@ const Row =(props)=>{
                 </Paper>
 
                 <Box display="flex" flexDirection="row" justifyContent="space-around" id="contentRow" height="85%">
-                    {rowComponents.map((c, index)=>(
-                        <ComponentProvider value={index}>
-                            <ContentComponent component={c} handleDelete={handleDeleteComponent}/>
+                    {props.row.contentComponents.map((c, index)=>(
+                        <ComponentProvider value={index} key={index}>
+                            <ContentComponent component={c} key={index} />
                         </ComponentProvider>
                     ))}
                     {status === 'createText' &&
-                        <CreateTextContent handleChangeStatus={handleChangeStatus} mode='create'/>
+                        <Box margin="5px" width="45%" height="100%" position="relative">
+                            <CreateTextContent handleChangeStatus={handleChangeStatus} mode='create'
+                            handleClose={handleCloseEditor}/>
+                        </Box>
                     }
                     {status === 'createImage' &&
-                        <CreateImageContent handleChangeStatus={handleChangeStatus}/>
+                        <Box margin="5px" width="45%" height="100%" position="relative">
+                            <CreateImageContent handleChangeStatus={handleChangeStatus}/>
+                        </Box>
                     }
                 </Box>
 

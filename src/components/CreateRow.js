@@ -2,8 +2,9 @@ import React, { useContext, useEffect } from "react";
 import { Box, Button } from '@material-ui/core';
 import { gql, useMutation } from '@apollo/client';
 import PageContext from "../contexts/PageContext";
+import RefreshContext from "../contexts/RefreshContext";
 
-const CreateRow = (props) => {
+const CreateRow = () => {
 
     const CREATE_ROW = gql`
         mutation CreateRow($title: String!, $pageId: String!) {
@@ -23,6 +24,7 @@ const CreateRow = (props) => {
     const [addRow, { data, error, loading }] = useMutation(CREATE_ROW);
 
     const pageId = useContext(PageContext);
+    const refresh = useContext(RefreshContext);
 
     const handleCreate = () => {
         addRow({variables: { title: "newRow", pageId: pageId}});
@@ -31,7 +33,7 @@ const CreateRow = (props) => {
     useEffect(() => {
 
         if (!loading && data){
-            console.log(data);
+            refresh();
         }
         
     }, [data, loading]);
