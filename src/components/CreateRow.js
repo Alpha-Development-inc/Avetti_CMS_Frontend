@@ -40,7 +40,7 @@ const CreateRow = () => {
 
     return (
 
-        <Box className="row-create" height="33%" border={2} borderColor="text.disabled" borderRadius="10px" marginTop="5px">
+        <Box className="row-create" height="300px" border={2} borderColor="text.disabled" borderRadius="10px" marginTop="5px">
             <Box display="flex" alignItems="center" justifyContent="center" height="100%">
                 <Button variant="contained" size="large" onClick={handleCreate}>+</Button>
             </Box>

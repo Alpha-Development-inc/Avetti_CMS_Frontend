@@ -14,7 +14,7 @@ import { RefreshProvider } from '../contexts/RefreshContext';
 const Page =(props)=>{
 
     const PAGE = gql`{
-        page(title:"${props.match.params.pageTitle}"){
+        page(title:"${props.pageTitle}"){
           id
           title
           contentRows{
@@ -55,7 +55,7 @@ const Page =(props)=>{
     if (loading) return (<Loading/>);
     if (error) return <p>Error :(</p>;
 
-    if (!page) {return (<CreatePage pageTitle={props.match.params.pageTitle} addPage={handleAddPage}/>)}    
+    if (!page) {return (<CreatePage pageTitle={props.pageTitle} addPage={handleAddPage}/>)}    
 
     return(
         <PageProvider value={page.id}>
