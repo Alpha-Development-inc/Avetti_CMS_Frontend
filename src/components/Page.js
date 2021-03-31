@@ -14,7 +14,7 @@ import { RefreshProvider } from '../contexts/RefreshContext';
 const Page =(props)=>{
 
     const PAGE = gql`{
-        page(title:"${props.match.params.pageTitle}"){
+        page(title:"${props.pageTitle}"){
           id
           title
           contentRows{
@@ -34,11 +34,15 @@ const Page =(props)=>{
 
     const {loading, error, data } = useQuery(PAGE);
 
+    const handleRefresh = () => {
+        console.log('state variable is changed');
+        setRefresh(!refresh);
+    }
 
     useEffect(()=>{
         if (!loading && data){
             console.log('page loaded...');
-            console.log(data.page);
+            console.log(data);
             setPage(data.page);
         }
     },[loading, data]);
@@ -51,14 +55,14 @@ const Page =(props)=>{
     if (loading) return (<Loading/>);
     if (error) return <p>Error :(</p>;
 
-    if (!page) {return (<CreatePage pageTitle={props.match.params.pageTitle} addPage={handleAddPage}/>)}    
+    if (!page) {return (<CreatePage pageTitle={props.pageTitle} addPage={handleAddPage}/>)}    
 
     return(
         <PageProvider value={page.id}>
-            <RefreshProvider value={setRefresh}>
+            <RefreshProvider value={handleRefresh}>
                 <Box height="100%" display="flex" flexDirection="column" width="60%" marginX="auto">
-                    {page.contentRows.map((g, index)=>(
-                    <Row rowIndex={index} rowComponents={g.contentComponents}/>
+                    {page.contentRows.map((r, index)=>(
+                    <Row rowIndex={index} key={index} row={r}/>
                     ))}
                     <CreateRow/>
                 </Box>

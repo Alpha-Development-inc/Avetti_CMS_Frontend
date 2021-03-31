@@ -1,62 +1,43 @@
 import { Box, Button, Paper,Dialog,DialogActions, Card, CardHeader, IconButton, CardContent, Menu, MenuItem } from '@material-ui/core';
 import React, { useState, useEffect, createRef, useContext } from 'react';
-import ReactDOM from 'react-dom'
-import CreateComponentDialog from './CreateComponentDialog'
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
 import { gql, useMutation } from '@apollo/client';
-import { RowProvider } from '../contexts/RowContext';
-import { IKImage } from 'imagekitio-react';
-import { MoreVert, ZoomIn, ZoomOut } from '@material-ui/icons';
+import { MoreVert, Refresh, ZoomIn, ZoomOut } from '@material-ui/icons';
 import ComponentContext from '../contexts/ComponentContext';
 import PageContext from "../contexts/PageContext";
 import RowContext from "../contexts/RowContext";
-import Loading from './Loading';
+import RefreshContext from '../contexts/RefreshContext';
 
 const ImageComponent =(props)=>{
 
-    const [anchorEl, setAnchorEl] = useState(null);
     const [status, setStatus] = useState('default');
-    const [showMenu, setShowMenu] = useState(false);
     const [width, setWidth] = useState(0);
 
     const imgRef = createRef();
 
     const handleImageLoad = () => {
-        console.log(imgRef.current.naturalWidth);
         setWidth(imgRef.current.naturalWidth);
     }
 
-    const handleClick = (event) => {
-      setAnchorEl(event.currentTarget);
-    };
-
     const handleEditImage = () => {
         setStatus('editImage');
-        setAnchorEl(null);
     }
-  
-    const handleClose = () => {
-      setAnchorEl(null);
-    };
 
     const increaseScale = () => {
         if (width < 250){
             setWidth(width + 10);
-            console.log(width);
         }
     }
 
     const decreaseScale = () => {
         if (width > 150){
             setWidth(width - 10);
-            console.log(width);
         }
     }
 
     const pageId = useContext(PageContext);
     const rowIndex = useContext(RowContext);
-    const componentIndex = useContext(ComponentContext); 
+    const componentIndex = useContext(ComponentContext);
+    const refresh = useContext(RefreshContext); 
 
     const RESIZE_COMPONENT = gql`
         mutation ResizeImageComponent($newWidth: Int!, $componentIndex: Int! $rowIndex: Int!, $pageId: String!) {

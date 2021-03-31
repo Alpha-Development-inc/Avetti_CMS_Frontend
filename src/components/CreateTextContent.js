@@ -112,14 +112,14 @@ const CreateTextContent = (props) => {
   if (loading) return (<Loading/>);
 
   return (
-    <Box display="flex" flexDirection="column" justifyContent="center" height="100%">
-      <Box className="spacer">
+    <Box height="100%">
+      <Box height="100%">
         <Editor
           editorState={editorState}
           onEditorStateChange={handleEditorChange}
           wrapperClassName="wrapper-class"
           editorClassName="editor-class"
-          toolbarClassName="toolbar-class"
+          toolbarClassName="toolbar-class box-elevated"
           toolbar={{
             options: ['inline', 'fontSize', 'textAlign'],
             inline: {
@@ -128,7 +128,9 @@ const CreateTextContent = (props) => {
           }}
         />
       </Box>
-      <Box display="flex" justifyContent="flex-end" margin="5px">
+      <Box className="control-buttons box-elevated">
+        <Button variant="contained" color="danger" size="small" onClick={props.handleClose}>Close</Button>
+        <span className="spacer"></span> 
         <Button variant="contained" color="primary" onClick={convertContentToHTML} size="small">Save</Button> 
       </Box>
     </Box>

@@ -1,17 +1,5 @@
 import { Box, Button, Paper,Dialog,DialogActions, Card, CardHeader, IconButton, CardContent, Menu, MenuItem } from '@material-ui/core';
-import React, { useState, useEffect, createRef, useContext } from 'react';
-import ReactDOM from 'react-dom'
-import CreateComponentDialog from './CreateComponentDialog'
-import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { gql, useMutation } from '@apollo/client';
-import { RowProvider } from '../contexts/RowContext';
-import { IKImage } from 'imagekitio-react';
-import { MoreVert, ZoomIn, ZoomOut } from '@material-ui/icons';
-import ComponentContext from '../contexts/ComponentContext';
-import PageContext from "../contexts/PageContext";
-import RowContext from "../contexts/RowContext";
-import Loading from './Loading';
+import React, { useState } from 'react';
 import DOMPurify from 'dompurify';
 import CreateTextContent from './CreateTextContent';
 
@@ -20,17 +8,11 @@ import CreateTextContent from './CreateTextContent';
 const TextComponent=(props)=>{
 
     const [status, setStatus] = useState('default');
-    const [showMenu, setShowMenu] = useState(false);
 
-
-const handleDelete = () => {
-    props.handleDelete();
-}
-    const handleUpdate=()=>{
-        return(
-            <CreateTextContent />
-        )
+    const handleDelete = () => {
+        props.handleDelete();
     }
+
 
     const handleEditText = () => {
         setStatus('editText');
@@ -47,6 +29,10 @@ const handleDelete = () => {
         if (status === 'showMenu'){
             setStatus('default');
         }
+    }
+
+    const handleCloseEditor = () => {
+        setStatus('default');
     }
 
 
@@ -71,7 +57,8 @@ const handleDelete = () => {
                     }
                     {status === 'editText' && 
                     
-                        <CreateTextContent mode="edit" content={props.content} handleChangeStatus={handleChangeStatus}/>
+                        <CreateTextContent mode="edit" content={props.content} handleChangeStatus={handleChangeStatus}
+                        handleClose={handleCloseEditor}/>
                         
                     }
 
