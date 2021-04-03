@@ -48,7 +48,7 @@ const ContentComponent =(props)=>{
 
     return(
 
-            <Box margin="5px" width="45%" height="100%">
+            <Box margin="5px" width="100%" height="100%">
 
                 
 
