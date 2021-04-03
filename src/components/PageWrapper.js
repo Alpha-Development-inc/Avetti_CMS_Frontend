@@ -11,13 +11,15 @@ import { PageProvider } from '../contexts/PageContext';
 import { RefreshProvider } from '../contexts/RefreshContext';
 import Page from './Page';
 import PagePreview from './preview/PagePreview';
-
+import LoginDialog from './LoginDialog';
 const PageWrapper =(props)=>{
 
-    const [mode, setMode] = useState('admin');
+    const [mode, setMode] = useState('preview');
+    const [authorized,setAuthorized] = useState('false');
     
     const handleSwitchMode = () => {
         if (mode === 'admin'){
+            setAuthorized(false);
             setMode('preview')
         }
         else {
@@ -26,29 +28,38 @@ const PageWrapper =(props)=>{
     }
 
     return(
+        
         <Box>
+            
             <Box display="flex" justifyContent="center" margin="5px">
+                
                 <Button variant="contained" color="primary" size="large" onClick={handleSwitchMode}>
                     {mode === 'admin' &&
-                        <div>Preview Mode</div>
+                   
+                       <div>Preview Mode</div> 
+
                     }
                     {mode === 'preview' &&
                         <div>Admin Mode</div>
                     }
                 </Button>
             </Box>
-            {mode === 'admin' &&
-                <Page pageTitle={props.match.params.pageTitle}/>
+            { mode === 'admin' && authorized === false &&
+                <LoginDialog setLogin={setAuthorized} />
+            }
+        
+            {authorized === true && mode === 'admin' &&
+                             <Page pageTitle={props.match.params.pageTitle}/>
             }
             {mode === 'preview' &&
                 <PagePreview pageTitle={props.match.params.pageTitle}/>
             }
-        </Box>        
+        
+        </Box>  
+
+
+     
+
     )
 }
 export default PageWrapper;
-
-
-
-
-
