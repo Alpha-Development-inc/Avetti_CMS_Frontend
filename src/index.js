@@ -22,7 +22,7 @@ const client = new ApolloClient({
 });
 
 const urlEndpoint = 'https://ik.imagekit.io/g56fnhdh8px/';
-
+localStorage.clear();
 ReactDOM.render(
   <ApolloProvider client={client}>
     <IKContext urlEndpoint={urlEndpoint}>
