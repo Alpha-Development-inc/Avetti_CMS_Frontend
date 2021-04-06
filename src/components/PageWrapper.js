@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Row from "./Row";
+import  { useContext } from 'react';
 
 import { useEffect } from 'react';
 import { gql, useQuery } from '@apollo/client';
@@ -12,19 +13,32 @@ import { RefreshProvider } from '../contexts/RefreshContext';
 import Page from './Page';
 import PagePreview from './preview/PagePreview';
 import LoginDialog from './LoginDialog';
+import AuthContext from '../contexts/AuthContext';
 const PageWrapper =(props)=>{
 
     const [mode, setMode] = useState('preview');
     const [authorized,setAuthorized] = useState('false');
-    
+    const auth = useContext(AuthContext);
+    const handleLogOut=()=>{
+        localStorage.setItem('login','f');
+        //setAuthorized(false);
+        setMode('preview');
+        auth.updateAuth(false);
+        // <AuthContext value={{auth:authorized,updateAuth:setAuthorized}} />
+
+    }
     const handleSwitchMode = () => {
         if (mode === 'admin'){
-            setAuthorized(false);
+            //setAuthorized(false);
             setMode('preview')
         }
         else {
             setMode('admin');
         }
+    }
+    const handleLogin=()=>{
+        
+        auth.updateAuth(true);
     }
 
     return(
@@ -43,12 +57,18 @@ const PageWrapper =(props)=>{
                         <div>Admin Mode</div>
                     }
                 </Button>
+                {auth.auth===true && 
+                    
+                    <Button onClick={handleLogOut}>
+                        <div>logout</div>
+                    </Button>
+                }
             </Box>
-            { mode === 'admin' && authorized === false &&
-                <LoginDialog setLogin={setAuthorized} />
+            { mode === 'admin' && !auth.auth &&//authorized === false &&
+                <LoginDialog setLogin={handleLogin} />
             }
         
-            {authorized === true && mode === 'admin' &&
+            {auth.auth === true && mode === 'admin' &&
                              <Page pageTitle={props.match.params.pageTitle}/>
             }
             {mode === 'preview' &&

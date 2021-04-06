@@ -20,6 +20,7 @@ const [pw,setPw] =useState();
     setOpen(true);
   };
   const handleLogin=()=>{
+      localStorage.setItem('login', "t");
       console.log(login);
       console.log(pw);
       if (login=='admin' && pw =='admin'){
