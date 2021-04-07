@@ -15,12 +15,16 @@ import PagePreview from './preview/PagePreview';
 import LoginDialog from './LoginDialog';
 import AuthContext from '../contexts/AuthContext';
 const PageWrapper =(props)=>{
-
+    const [open, setOpen] = useState(false);
     const [mode, setMode] = useState('preview');
     const [authorized,setAuthorized] = useState('false');
     const auth = useContext(AuthContext);
+    
+    const handleDialogue=()=>{
+        setOpen(!open);
+    }
     const handleLogOut=()=>{
-        localStorage.setItem('login','f');
+        localStorage.clear();
         //setAuthorized(false);
         setMode('preview');
         auth.updateAuth(false);
@@ -36,37 +40,49 @@ const PageWrapper =(props)=>{
             setMode('admin');
         }
     }
-    const handleLogin=()=>{
+    const handleLogin=(s)=>{
         
-        auth.updateAuth(true);
+        auth.updateAuth(s);
     }
 
     return(
         
         <Box>
             
-            <Box display="flex" justifyContent="center" margin="5px">
-                
-                <Button variant="contained" color="primary" size="large" onClick={handleSwitchMode}>
-                    {mode === 'admin' &&
-                   
-                       <div>Preview Mode</div> 
-
-                    }
-                    {mode === 'preview' &&
-                        <div>Admin Mode</div>
-                    }
-                </Button>
-                {auth.auth===true && 
+            <Box width="54%" marginX="auto" display="flex"  margin="5px">
+                {auth.auth &&
+                    <Button variant="contained" color="primary" size="large" onClick={handleSwitchMode}>
+                        
+                        {mode === 'admin' &&
                     
-                    <Button onClick={handleLogOut}>
-                        <div>logout</div>
+                        <div>Preview Mode</div> 
+
+                        }
+                        {mode === 'preview' &&
+                            <div>Admin Mode</div>
+                        }
                     </Button>
                 }
+                <div className='spacer'></div>
+                <Box>
+                    {auth.auth===true && 
+                        
+                        <Button  variant="contained" color="secondary" size="large" onClick={handleLogOut}>
+                            <div>logout</div>
+                        </Button>
+                    }
+                    {!auth.auth && 
+                        
+                        <Button variant="contained" color="primary" size="large" onClick={handleDialogue}>
+                            <div>login</div>
+                        </Button>
+
+                    }
+                </Box>
             </Box>
-            { mode === 'admin' && !auth.auth &&//authorized === false &&
-                <LoginDialog setLogin={handleLogin} />
-            }
+            {/* { mode === 'admin' && !auth.auth &&//authorized === false && */}
+                <LoginDialog setLogin={handleLogin} open={open} close={handleDialogue} />
+            
         
             {auth.auth === true && mode === 'admin' &&
                              <Page pageTitle={props.match.params.pageTitle}/>

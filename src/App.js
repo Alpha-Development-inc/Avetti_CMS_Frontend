@@ -13,7 +13,7 @@ const App = () =>{
         console.log('login=true');
         setAuth(true);
     }
-},[]);
+  },[]);
 
   const [auth, setAuth] = useState(false);
 

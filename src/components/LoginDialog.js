@@ -13,12 +13,10 @@ import InputLabel from '@material-ui/core/InputLabel';
 
 import ReactDOM from 'react-dom'
 const LoginDialog=(props)=> {
-    const [open, setOpen] = React.useState(true);
+
 const [login,setLogin] =useState();
 const [pw,setPw] =useState();
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+ 
   const handleLogin=()=>{
       localStorage.setItem('login', "t");
       console.log(login);
@@ -26,7 +24,7 @@ const [pw,setPw] =useState();
       if (login=='admin' && pw =='admin'){
           console.log('login Approved');
           props.setLogin(true);
-          setOpen(false);
+          props.close();
       }
       else {
           ReactDOM.render(<div >
@@ -36,14 +34,11 @@ const [pw,setPw] =useState();
       }
   }
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <div>
       
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog open={props.open} onClose={props.close} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Login</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -72,7 +67,7 @@ const [pw,setPw] =useState();
 
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={props.close} color="primary">
             Cancel
           </Button>
           <Button onClick={handleLogin} color="primary">
