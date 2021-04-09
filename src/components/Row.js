@@ -13,6 +13,8 @@ import { ComponentProvider } from '../contexts/ComponentContext';
 import CreateImageContent from './CreateImageContent';
 import RefreshContext from '../contexts/RefreshContext';
 
+
+//-----------------------WRITTEN BY ALEX-----------------------------------------------------
 const Row =(props)=>{
 
     const [open, setOpen] = useState(false);
@@ -50,10 +52,8 @@ const Row =(props)=>{
         }
     `;
 
-    const [deleteRow, { data, error, loading }] = useMutation(DELETE_ROW);
-    const [reorder, 
-        {data: reorderData, loading: reorderLoading, error: reorderError}
-    ] = useMutation(REORDER_COMPONENTS);
+    const [deleteRow, { data, loading }] = useMutation(DELETE_ROW);
+    const [reorder] = useMutation(REORDER_COMPONENTS);
 
     const handleDelete = () => {
         console.log(row.rowIndex);
@@ -68,10 +68,9 @@ const Row =(props)=>{
             refresh();
         }
         
-    }, [data, loading]);
+    }, [data, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        console.log(props);
         setRow(props);       
     }, [props]);
 
@@ -107,9 +106,16 @@ const Row =(props)=>{
 
     }
 
+    const handleDeleteComponent = (index) => {
+        let components = Array.from(row.row.contentComponents);
+        components.splice(index,1);
+        console.log(components);
+        setRow({...row, row : {...row.row, contentComponents : components}});
+    }
+
     return(
 
-        <RowProvider value={row.rowIndex}>
+        <RowProvider value={{rowIndex: row.rowIndex, deleteComponent: handleDeleteComponent}}>
             <Paper elevation={3}>
 
             

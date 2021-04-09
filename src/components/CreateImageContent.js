@@ -6,6 +6,8 @@ import RefreshContext from "../contexts/RefreshContext";
 import RowContext from "../contexts/RowContext";
 import Loading from './Loading';
 
+
+//-----------------------WRITTEN BY ALEX-----------------------------------------------------
 const CREATE_IMAGE_COMPONENT = gql`
 mutation CreateImageComponent($image: Upload, $rowIndex: Int!, $pageId: String!) {
     createImageComponent(image: $image, rowIndex: $rowIndex, pageId: $pageId){
@@ -26,16 +28,16 @@ const CreateImageContent = (props) => {
     const [image, setImage] = useState(null);
     const [focus, setFocus] = useState(false);
     const pageId = useContext(PageContext);
-    const rowIndex = useContext(RowContext);
+    const row = useContext(RowContext);
     const refresh = useContext(RefreshContext);
     const fileInputRef = useRef(); 
 
-    const [update, {data, error, loading}] = useMutation(CREATE_IMAGE_COMPONENT);
+    const [update, {data, loading}] = useMutation(CREATE_IMAGE_COMPONENT);
 
     const handleSave = () => {
         update({variables:{
             image: image,
-            rowIndex: rowIndex,
+            rowIndex: row.rowIndex,
             pageId: pageId
         }});
     }
@@ -45,7 +47,7 @@ const CreateImageContent = (props) => {
             refresh();
             props.handleChangeStatus('default');
         }
-    }, [data, loading]);
+    }, [data, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (loading) return (<Loading/>);
 

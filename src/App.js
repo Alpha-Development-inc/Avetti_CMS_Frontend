@@ -1,11 +1,11 @@
 import './App.css';
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import HomePage from './components/HomePage';
-import Page from './components/Page';
 import PageWrapper from './components/PageWrapper';
-import AuthContext, { AuthProvider } from './contexts/AuthContext'
+import { AuthProvider } from './contexts/AuthContext'
 
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 
 const App = () =>{
   useEffect(()=>{
@@ -21,7 +21,6 @@ const App = () =>{
   return (
   <AuthProvider value={{auth:auth,updateAuth:setAuth}}>
       <BrowserRouter>
-        
         <Switch>
           <Route path='/' exact component={HomePage} />
           <Route path='/:pageTitle' component={PageWrapper} />

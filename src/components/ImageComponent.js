@@ -1,12 +1,12 @@
-import { Box, Button, Paper,Dialog,DialogActions, Card, CardHeader, IconButton, CardContent, Menu, MenuItem } from '@material-ui/core';
-import React, { useState, useEffect, createRef, useContext } from 'react';
+import { Box, Button, Paper } from '@material-ui/core';
+import React, { useState, createRef, useContext } from 'react';
 import { gql, useMutation } from '@apollo/client';
-import { MoreVert, Refresh, ZoomIn, ZoomOut } from '@material-ui/icons';
+import { ZoomIn, ZoomOut } from '@material-ui/icons';
 import ComponentContext from '../contexts/ComponentContext';
 import PageContext from "../contexts/PageContext";
 import RowContext from "../contexts/RowContext";
-import RefreshContext from '../contexts/RefreshContext';
 
+//-----------------------WRITTEN BY ALEX-----------------------------------------------------
 const ImageComponent =(props)=>{
 
     const [status, setStatus] = useState('default');
@@ -35,9 +35,8 @@ const ImageComponent =(props)=>{
     }
 
     const pageId = useContext(PageContext);
-    const rowIndex = useContext(RowContext);
+    const row = useContext(RowContext);
     const componentIndex = useContext(ComponentContext);
-    const refresh = useContext(RefreshContext); 
 
     const RESIZE_COMPONENT = gql`
         mutation ResizeImageComponent($newWidth: Int!, $componentIndex: Int! $rowIndex: Int!, $pageId: String!) {
@@ -45,10 +44,10 @@ const ImageComponent =(props)=>{
         }
     `;
 
-    const [resizeComponent, { data, error, loading }] = useMutation(RESIZE_COMPONENT);
+    const [resizeComponent] = useMutation(RESIZE_COMPONENT);
 
     const handleResize = () => {
-        resizeComponent({variables: { newWidth: width, componentIndex: componentIndex, rowIndex: rowIndex, pageId: pageId}});
+        resizeComponent({variables: { newWidth: width, componentIndex: componentIndex, rowIndex: row.rowIndex, pageId: pageId}});
         setStatus('default');
     }
 
@@ -92,7 +91,7 @@ const ImageComponent =(props)=>{
                     </Box> 
                 }
             <Box>
-                <img alt="image" src={props.content} ref={imgRef} width={width} onLoad={handleImageLoad}/>
+                <img alt="content" src={props.content} ref={imgRef} width={width} onLoad={handleImageLoad}/>
             </Box>
             </Box>
         </Paper>                    

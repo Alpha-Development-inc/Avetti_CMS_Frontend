@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box } from '@material-ui/core';
 import RowPreview from './RowPreview';
 
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 const PagePreview = (props) => {
   const [page, setPage] = useState({
       contentRows: []
@@ -11,14 +12,8 @@ const PagePreview = (props) => {
   useEffect(() => {
     axios.get('http://localhost:8080/api/pages/' + props.pageTitle).then((response) => {
         setPage(response.data);
-        console.log(response);
     });
-  }, []);
-
-  useEffect(() => {
-    console.log(page);
-  }, [page]);
- 
+  }, [props]); 
 
   return (
     <Box display="flex" flexDirection="column" width="60%" marginX="auto" marginTop="30px">

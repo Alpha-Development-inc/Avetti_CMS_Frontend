@@ -1,20 +1,20 @@
-import { Box, Button, Paper,Dialog,DialogActions, Card, CardHeader, IconButton, CardContent, Menu, MenuItem } from '@material-ui/core';
-import React, { useState, useEffect, useContext } from 'react';
+import { Box } from '@material-ui/core';
+import React, { useContext } from 'react';
 import { gql, useMutation } from '@apollo/client';
 import ImageComponent from './ImageComponent';
 import TextComponent from './TextComponent';
 import ComponentContext from '../contexts/ComponentContext';
 import PageContext from "../contexts/PageContext";
 import RowContext from "../contexts/RowContext";
-import RefreshContext from '../contexts/RefreshContext';
 import Loading from './Loading';
 
+
+//-----------------------WRITTEN BY ALEX-----------------------------------------------------
 const ContentComponent =(props)=>{
 
     const pageId = useContext(PageContext);
-    const rowIndex = useContext(RowContext);
+    const row = useContext(RowContext);
     const componentIndex = useContext(ComponentContext);
-    const refreshPage = useContext(RefreshContext);
 
     const DELETE_COMPONENT = gql`
     mutation DeleteComponent($componentIndex: Int!, $rowIndex: Int!, $pageId: String!) {
@@ -28,20 +28,12 @@ const ContentComponent =(props)=>{
       }
     `;
 
-    const [deleteComponent, { data, error, loading }] = useMutation(DELETE_COMPONENT);
+    const [deleteComponent, { loading }] = useMutation(DELETE_COMPONENT);
 
     const handleDelete = () => {
-      deleteComponent({variables: { componentIndex: componentIndex, rowIndex: rowIndex, pageId: pageId}});
+      row.deleteComponent(componentIndex);
+      deleteComponent({variables: { componentIndex: componentIndex, rowIndex: row.rowIndex, pageId: pageId}});
     }
-
-    useEffect(() => {
-
-      if (!loading && data){
-        console.log('component deleted');
-        refreshPage();
-      }
-      
-    }, [data, loading]);
 
     if (loading) {return <Loading/>}
 

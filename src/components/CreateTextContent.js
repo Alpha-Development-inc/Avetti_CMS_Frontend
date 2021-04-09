@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ContentState, EditorState} from 'draft-js';
+import { EditorState} from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-//import 'draft-js/dist/Draft.css';
 import { Box, Button } from "@material-ui/core";
 import { convertToHTML, convertFromHTML } from 'draft-convert';
 import { useMutation, gql } from "@apollo/client";
@@ -13,7 +12,7 @@ import ComponentContext from "../contexts/ComponentContext";
 import RefreshContext from "../contexts/RefreshContext";
 
 
-
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 const CREATE_TEXT_COMPONENT = gql`
 mutation CreateTextComponent($text: String!, $rowIndex: Int!, $pageId: String!) {
   createTextComponent(text: $text, rowIndex: $rowIndex, pageId: $pageId){
@@ -58,8 +57,8 @@ const CreateTextContent = (props) => {
   );
 
   const  [convertedContent, setConvertedContent] = useState(null);
-  const [create, {data, error, loading}] = useMutation(CREATE_TEXT_COMPONENT);
-  const [edit, {data: editData, error: editError, loading: editLoading}] = useMutation(EDIT_TEXT_COMPONENT);
+  const [create, {data, loading}] = useMutation(CREATE_TEXT_COMPONENT);
+  const [edit, {data: editData, loading: editLoading}] = useMutation(EDIT_TEXT_COMPONENT);
 
   const handleEditorChange = (state) => {
     setEditorState(state);
@@ -71,7 +70,7 @@ const CreateTextContent = (props) => {
   }
 
   const pageId = useContext(PageContext);
-  const rowIndex = useContext(RowContext);
+  const row = useContext(RowContext);
   const componentIndex = useContext(ComponentContext);
   const refreshPage = useContext(RefreshContext); 
 
@@ -80,7 +79,7 @@ const CreateTextContent = (props) => {
       if (props.mode === 'create'){
         create({variables:{
           text: convertedContent,
-          rowIndex: rowIndex,
+          rowIndex: row.rowIndex,
           pageId: pageId
         }});
       }
@@ -88,26 +87,26 @@ const CreateTextContent = (props) => {
         edit({variables:{
           text: convertedContent,
           componentIndex: componentIndex,
-          rowIndex: rowIndex,
+          rowIndex: row.rowIndex,
           pageId: pageId
         }});
       }
     }
-  },[convertedContent]);
+  },[convertedContent]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!loading && data){
         refreshPage();
         props.handleChangeStatus();
     }
-  }, [data, loading]);
+  }, [data, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!editLoading && editData){
       refreshPage();
-        props.handleChangeStatus();
+      props.handleChangeStatus();
     }
-  }, [editData, editLoading]);
+  }, [editData, editLoading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) return (<Loading/>);
 

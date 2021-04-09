@@ -13,6 +13,7 @@ import {
  } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 
+//WRITTEN BY ALEXANDER
 
 const httpLink = createUploadLink({uri: 'http://localhost:8080/graphql'});
 
