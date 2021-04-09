@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Row from "./Row";
-
 import { useEffect } from 'react';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { Box } from '@material-ui/core';
@@ -11,6 +10,7 @@ import { PageProvider } from '../contexts/PageContext';
 import { RefreshProvider } from '../contexts/RefreshContext';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
+//-----------------------WRITTEN BY ALEX-----------------------------------------------------
 const Page = (props) => {
 
     const PAGE = gql`{
@@ -47,9 +47,7 @@ const Page = (props) => {
     const [refresh, setRefresh] = useState(true);
 
     const {loading, error, data } = useQuery(PAGE);
-    const [reorder, 
-        {data: reorderData, loading: reorderLoading, error: reorderError}
-    ] = useMutation(REORDER_ROWS);
+    const [reorder] = useMutation(REORDER_ROWS);
 
     const handleRefresh = () => {
         console.log('state variable is changed');
@@ -62,14 +60,6 @@ const Page = (props) => {
             setPage(data.page);
         }
     },[loading, data]);
-
-    // useEffect(()=>{
-    //     if (!reorderLoading && reorderData){
-    //         console.log('rows reorderded...');
-    //         console.log(reorderData);
-    //         setPage(reorderData.reorderRows);
-    //     }
-    // },[reorderLoading, reorderData]);
 
     const handleAddPage = (newPage) => {
         console.log("in handle add page....")

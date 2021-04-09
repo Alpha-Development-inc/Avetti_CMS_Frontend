@@ -2,6 +2,8 @@ import React from 'react';
 import { Box } from '@material-ui/core';
 import DOMPurify from 'dompurify';
 
+
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 const ComponentPreview = (props) => {
 
     const createMarkup = (html) => {

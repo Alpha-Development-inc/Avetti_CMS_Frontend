@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FormControl, FormControlLabel, Radio, RadioGroup, Box } from '@material-ui/core';
 
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 const ChooseContentType = (props) => {
 
     const [type, setType] = useState('');

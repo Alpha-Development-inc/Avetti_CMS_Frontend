@@ -2,6 +2,7 @@ import React from 'react';
 import { Box } from '@material-ui/core';
 import ComponentPreview from './ComponentPreview';
 
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 const RowPreview = (props) => {
 
   return (

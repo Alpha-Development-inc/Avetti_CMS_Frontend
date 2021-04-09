@@ -4,6 +4,7 @@ import { gql, useMutation } from '@apollo/client';
 import PageContext from "../contexts/PageContext";
 import RefreshContext from "../contexts/RefreshContext";
 
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 const CreateRow = () => {
 
     const CREATE_ROW = gql`
@@ -21,7 +22,7 @@ const CreateRow = () => {
       }
       `;
 
-    const [addRow, { data, error, loading }] = useMutation(CREATE_ROW);
+    const [addRow, { data, loading }] = useMutation(CREATE_ROW);
 
     const pageId = useContext(PageContext);
     const refresh = useContext(RefreshContext);
@@ -36,7 +37,7 @@ const CreateRow = () => {
             refresh();
         }
         
-    }, [data, loading]);
+    }, [data, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
 

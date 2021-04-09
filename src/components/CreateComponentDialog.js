@@ -1,11 +1,8 @@
-import { Stepper,Step,StepLabel,Button,Box } from "@material-ui/core";
-import React,{useRef, useState} from 'react';
+import { Button,Box } from "@material-ui/core";
+import React,{useState} from 'react';
 import ChooseContentType from "./ChooseContentType";
-import CreateImageContent from "./CreateImageContent";
-import CreateTextContent from "./CreateTextContent";
-import ReactDOM from "react-dom";
 
-
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 const CreateComponentDialog=(props)=>{
     
     const [type, setType] = useState('');

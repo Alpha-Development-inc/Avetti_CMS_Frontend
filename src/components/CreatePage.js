@@ -3,6 +3,7 @@ import { Box, Button } from '@material-ui/core';
 import { gql, useMutation } from '@apollo/client';
 import '../styles/HomePage.css';
 
+//-----------------------WRITTEN BY SAVVY-----------------------------------------------------
 const CreatePage = (props) => {
 
     const CREATE_PAGE = gql`
@@ -20,7 +21,7 @@ const CreatePage = (props) => {
     }
     `;
 
-    const [addPage, { data, error, loading }] = useMutation(CREATE_PAGE);
+    const [addPage, { data, loading }] = useMutation(CREATE_PAGE);
 
     useEffect(() => {
         if (!loading && data){
@@ -28,7 +29,7 @@ const CreatePage = (props) => {
             console.log(data);
             props.addPage(data.createPage);
         }
-    }, [data, loading]);
+    }, [data, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleCreate = () => {
         addPage({variables: {title: props.pageTitle}});
